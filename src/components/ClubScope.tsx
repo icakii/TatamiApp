@@ -36,7 +36,8 @@ function useClubHead(club: Club | null | undefined) {
     manifest.searchParams.set('slug', club.slug)
     manifest.searchParams.set('app', window.location.origin)
     setLink('manifest', manifest.toString())
-    setLink('apple-touch-icon', club.logo_path ? clubAsset(club.id, 'apple-touch-icon.png') : '/icons/apple-touch-icon.png')
+    const version = club.logo_path?.includes('?') ? '?' + club.logo_path.split('?')[1] : ''
+    setLink('apple-touch-icon', club.logo_path ? clubAsset(club.id, `apple-touch-icon.png${version}`) : '/icons/apple-touch-icon.png')
     document.head.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', club.name)
     return () => {
       root.removeProperty('--color-aka')
