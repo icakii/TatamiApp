@@ -1,0 +1,573 @@
+{
+  "schedule": {
+    "title": "Class schedule",
+    "weekdays": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "weekdaysShort": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
+    "duration": "{{minutes}} min",
+    "beltRange": "Belts: {{range}}",
+    "calendar": {
+      "noClasses": "No classes this day."
+    },
+    "signUp": "Sign up",
+    "cancelSignUp": "Cancel",
+    "signedUp": "You're signed up"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: [date]",
+    "intro": "[Club name] (\"the club\", \"we\") runs this site and app to organize classes, belts, payments, and messages for its students. This page explains what personal data we collect, why, and what rights you have.",
+    "sections": [
+      {
+        "title": "What data we collect",
+        "body": [
+          "For students: name, birth year (not a full birth date), belt, status at the club (active/trial/left), phone and email (optional), payment status.",
+          "For a parent/legal guardian (optional, for minor students): name, phone, email — used only to contact them about their child.",
+          "Login account: email address and password (the password is stored encrypted; we never see it in plain form).",
+          "Technical info: your chosen language (Bulgarian/English), and minimal on-device caching for offline access to your schedule and status (see \"Cookies\" below)."
+        ]
+      },
+      {
+        "title": "Why we collect this data",
+        "body": [
+          "To organize classes and track a student's progress (belt, attendance).",
+          "To track payment status for the club's monthly fee.",
+          "To send messages about schedule changes or important news.",
+          "Payments in the app are recorded only — we do not process or store any card data."
+        ]
+      },
+      {
+        "title": "Children and guardian consent",
+        "body": [
+          "Many of our students are minors. For them we collect only a birth year, never a full date, and nothing beyond what's needed to run classes.",
+          "A student account is only ever created by a coach or club owner — there's no way for a stranger to self-register.",
+          "A coach's notes about a student are private and never shown to the student themselves or to any third party."
+        ]
+      },
+      {
+        "title": "Who has access to the data",
+        "body": [
+          "Coaches and the club owner can see their own club's students' data (including guardian contact info) but cannot add or edit members themselves — that's done by the Tatami team on their request.",
+          "The Tatami team (who runs the platform this site is built on) can manage data across every club to keep the service running.",
+          "No student or parent has access to another student's data."
+        ]
+      },
+      {
+        "title": "Cookies and local storage",
+        "body": [
+          "We only use functional cookies/local storage: your chosen language, your login session, and caching your schedule/status for offline access in the app.",
+          "We don't use advertising or third-party tracking cookies."
+        ]
+      },
+      {
+        "title": "Third parties that process data",
+        "body": [
+          "Supabase — the app's database and hosting.",
+          "Render — hosts the site.",
+          "Resend — sends email notifications (only if the club has the email channel enabled).",
+          "We never sell or share personal data with advertisers."
+        ]
+      },
+      {
+        "title": "How long we keep data",
+        "body": [
+          "We keep active students' data for as long as they're members. After leaving, data is kept for a reasonable period for accounting purposes, unless you request earlier deletion (see \"Your rights\")."
+        ]
+      },
+      {
+        "title": "Your rights",
+        "body": [
+          "You can request a copy of your data, ask us to correct it, or request full deletion.",
+          "A parent/guardian can do the same on behalf of a minor child.",
+          "To exercise these rights, contact us at the email below.",
+          "You have the right to file a complaint with your national data protection authority if you believe your rights have been violated."
+        ]
+      },
+      {
+        "title": "Security",
+        "body": [
+          "Data is transmitted encrypted (HTTPS). Row-level access control in the database ensures each user only ever sees the data they're allowed to."
+        ]
+      },
+      {
+        "title": "Changes to this policy",
+        "body": [
+          "We may update this page as needed. The last-updated date is shown at the top."
+        ]
+      },
+      {
+        "title": "Contact",
+        "body": [
+          "For questions about your personal data, write to: [contact email]"
+        ]
+      }
+    ],
+    "back": "Home"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: [date]",
+    "intro": "These terms govern use of [Club name]'s site and app, built on the Tatami platform. By signing into your account, you agree to these terms.",
+    "sections": [
+      {
+        "title": "What the service does",
+        "body": [
+          "The site gives students access to the class schedule, their belt status, payment status, and messages from the coach. The coach/owner panel shows the club's student info, view-only."
+        ]
+      },
+      {
+        "title": "Accounts and access",
+        "body": [
+          "There's no self-registration — every account is created by a coach or club owner, or by the Tatami team on their request.",
+          "You're responsible for keeping your password secret. If you suspect unauthorized access, contact your coach immediately.",
+          "You can reset a forgotten password from the login page."
+        ]
+      },
+      {
+        "title": "Payments",
+        "body": [
+          "Payment status in the app is informational only — recorded by hand by the coach/owner. The site does not currently process online payments; we never collect or store card data.",
+          "Actual payment arrangements for the monthly fee are made directly with the club."
+        ]
+      },
+      {
+        "title": "Minors",
+        "body": [
+          "Many students are minors. A parent/guardian is responsible for giving consent when enrolling their child, per our Privacy Policy."
+        ]
+      },
+      {
+        "title": "User responsibilities",
+        "body": [
+          "Use the site only for its intended purpose. Attempting unauthorized access to another account or data isn't allowed.",
+          "Content (schedule, messages) is intended only for that club's own students."
+        ]
+      },
+      {
+        "title": "Limitation of liability",
+        "body": [
+          "The service is provided \"as is,\" with no guarantee of uninterrupted availability — we're still in an early stage of development.",
+          "The club is responsible for the actual classes and student safety during them; we only provide the management software."
+        ]
+      },
+      {
+        "title": "Termination",
+        "body": [
+          "The club or Tatami may terminate account access for violating these terms. A student/parent may request account closure and data deletion at any time."
+        ]
+      },
+      {
+        "title": "Governing law",
+        "body": [
+          "These terms are governed by the laws of the Republic of Bulgaria."
+        ]
+      },
+      {
+        "title": "Changes to these terms",
+        "body": [
+          "We may update these terms as needed. The last-updated date is shown at the top."
+        ]
+      },
+      {
+        "title": "Contact",
+        "body": [
+          "For questions about these terms, write to: [contact email]"
+        ]
+      }
+    ],
+    "back": "Home"
+  },
+  "store": {
+    "navLink": "Store",
+    "title": "Club store",
+    "body": "Gear and clothing with the club logo. Reserve here, pay and pick it up at the hall.",
+    "note": "Example products. The coach confirms availability.",
+    "reserve": "Reserve",
+    "reserved": "Reserved, pick up at the dojo",
+    "badge": {
+      "new": "New",
+      "popular": "Popular"
+    },
+    "items": {
+      "tee": {
+        "name": "Club T-shirt",
+        "desc": "Cotton tee with the club emblem on the chest."
+      },
+      "gi": {
+        "name": "Karate gi",
+        "desc": "Sturdy gi for training and gradings, white belt included."
+      },
+      "bag": {
+        "name": "Gear bag",
+        "desc": "Light drawstring bag for your gi and pads."
+      },
+      "belt": {
+        "name": "Belt",
+        "desc": "Cotton belt in every rank color, sized to fit."
+      }
+    },
+    "loginToReserve": "Log in to reserve",
+    "mine": {
+      "title": "My reservations",
+      "open": "Store",
+      "none": "No reservations.",
+      "cancel": "Cancel reservation",
+      "status": {
+        "new": "Sent",
+        "ready": "Ready, pick it up",
+        "done": "Picked up",
+        "cancelled": "Cancelled"
+      }
+    },
+    "sheet": {
+      "for": "For {{name}}",
+      "age": "age {{age}}",
+      "height": "Height (cm)",
+      "weight": "Weight (kg)",
+      "note": "Note",
+      "notePlaceholder": "e.g. \"one size up, growing fast\"",
+      "error": "The reservation was not sent. Try again.",
+      "pay": "The coach sees the reservation with height and age. You pay and pick it up at the hall."
+    }
+  },
+  "auth": {
+    "navLink": "Log in",
+    "title": "Log in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Log in",
+    "submitting": "Signing in...",
+    "error": "Wrong email or password.",
+    "noAccount": "Don't have an account?",
+    "noAccountLink": "Contact your coach",
+    "modalTitle": "How to get access",
+    "modalBody": "Access is only ever created by your coach. Tell them your email in person or by message and they'll set up an account with a password for you. Nobody can register on this site themselves, to keep students' accounts safe.",
+    "modalClose": "Got it",
+    "forgotLink": "Forgot password?",
+    "forgotTitle": "Forgot password",
+    "forgotSubmit": "Send reset link",
+    "forgotSent": "If that email exists, we've sent a password reset link.",
+    "forgotError": "Something went wrong. Please try again.",
+    "resetTitle": "New password",
+    "resetNewPassword": "New password",
+    "resetSubmit": "Save password",
+    "back": "Back"
+  },
+  "tabs": {
+    "home": "Home",
+    "schedule": "Schedule",
+    "competitions": "Competitions",
+    "payments": "Payments",
+    "profile": "Profile"
+  },
+  "competitions": {
+    "title": "Competitions",
+    "upcoming": "Upcoming",
+    "noUpcoming": "No upcoming competitions.",
+    "myResults": "My results",
+    "noResults": "No results yet."
+  },
+  "studentHome": {
+    "greeting": "Hi, {{name}}",
+    "nextClass": "Next class",
+    "changed": "CHANGED",
+    "newTime": "New start time: {{time}}",
+    "latestMessage": "Latest message",
+    "inbox": "Messages",
+    "noMessages": "No messages yet.",
+    "noNextClass": "No classes scheduled.",
+    "install": {
+      "title": "Install the app",
+      "ios": "iPhone: Share -> Add to Home Screen",
+      "android": "Android: browser menu -> Install app",
+      "dismiss": "Got it"
+    },
+    "attendance": {
+      "title": "Attendance",
+      "none": "Your coach hasn't marked any sessions yet.",
+      "last30": "{{present}} of {{total}} sessions in the last 30 days",
+      "streak_one": "{{count}} in a row",
+      "streak_other": "{{count}} in a row",
+      "lastSession": "Last session {{date}}: {{status}}"
+    },
+    "staffCard": {
+      "title": "Admin panel",
+      "body": "Mark attendance and payments"
+    }
+  },
+  "paymentStatus": {
+    "trial": "Trial",
+    "paid": "Paid",
+    "due": "Due",
+    "overdue": "Overdue",
+    "waived": "Waived",
+    "unknown": "No data"
+  },
+  "paymentsPage": {
+    "title": "Payments",
+    "empty": "No payments recorded yet.",
+    "paidThrough": "Paid through",
+    "neverPaid": "Not paid yet — contact your coach."
+  },
+  "profilePage": {
+    "title": "Profile",
+    "belt": "Belt",
+    "viewSite": "View public site",
+    "logout": "Log out"
+  },
+  "admin": {
+    "title": "Admin panel",
+    "noAccess": "You don't have access to this page.",
+    "backToApp": "Back to app",
+    "status": {
+      "active": "Active",
+      "trial": "Trial",
+      "paused": "Paused",
+      "left": "Left"
+    },
+    "role": {
+      "owner": "Owner",
+      "coach": "Coach",
+      "student": "Student"
+    },
+    "members": {
+      "title": "Members",
+      "viewOnlyNote": "Student details (photo, contacts, parents, belt, group) are entered by us. If something needs changing, message us. You mark attendance and paid fees.",
+      "searchPlaceholder": "Search by name",
+      "allBelts": "All belts",
+      "allStatuses": "All statuses",
+      "contact": "Contact",
+      "guardian": "Parent / guardian"
+    },
+    "nav": {
+      "members": "Members",
+      "subscription": "Subscription",
+      "attendance": "Attendance",
+      "payments": "Fee payments",
+      "reservations": "Reservations",
+      "qr": "QR check-in"
+    },
+    "payments": {
+      "title": "Payments",
+      "name": "Name",
+      "fee": "Fee",
+      "paidThrough": "Paid through",
+      "neverPaid": "Never paid",
+      "recordPayment": "Record payment",
+      "methods": {
+        "cash": "Cash",
+        "card": "Card",
+        "bank": "Bank",
+        "online": "Online"
+      },
+      "paidUp": "Paid up",
+      "behind": "Behind",
+      "expected": "Expected monthly",
+      "throughDate": "paid through {{date}}",
+      "statusPaid": "Paid",
+      "statusOverdue": "Overdue",
+      "noFee": "No fee set yet",
+      "undo": "Undo",
+      "undoHint": "Removes the last recorded month",
+      "undoConfirm": "Remove the last recorded payment for {{name}}?",
+      "paidUntil": "Paid until {{date}}",
+      "unpaidSince": "Unpaid since {{date}}",
+      "longBehind": "3+ months unpaid: have they quit?",
+      "markPaid": "Paid",
+      "reminder": {
+        "button": "Send email",
+        "sent": "Sent to {{to}}",
+        "last": "Last email: {{date}}",
+        "no_email": "No email for the student or parent",
+        "recently_sent": "An email was already sent in the last 2 weeks",
+        "not_behind": "The student is not 3 months behind",
+        "email_not_configured": "Email is not set up yet",
+        "send_failed": "The email was not sent"
+      }
+    },
+    "attendance": {
+      "title": "Attendance",
+      "date": "Date",
+      "class": "Class",
+      "noClassesThisDay": "No classes scheduled on this day.",
+      "noRoster": "No members in this class yet.",
+      "present": "Present",
+      "absent": "Absent",
+      "today": "Today",
+      "marked": "{{present}} of {{total}} present",
+      "markRest": "Mark the rest present",
+      "last30": "Last 30 days",
+      "noHistory": "No sessions marked in the last 30 days yet.",
+      "filterGroup": "Group",
+      "filterHall": "Hall",
+      "all": "All"
+    },
+    "subscription": {
+      "title": "Subscription",
+      "ownerOnly": "Only the club owner can view this page.",
+      "plan": "Plan",
+      "monthlyPrice": "Monthly price",
+      "paidUntil": "Paid until",
+      "neverPaid": "Not paid yet",
+      "overdue": "Overdue",
+      "current": "Current",
+      "payButton": "Pay now",
+      "processing": "Opening checkout...",
+      "completedNote": "Payment received — your account will be updated shortly. Contact us if it isn't within a day."
+    },
+    "edit": {
+      "cancel": "Cancel"
+    },
+    "schedule": {
+      "title": "Schedule",
+      "add": "New class",
+      "edit": "Edit class",
+      "name": "Name",
+      "day": "Day",
+      "time": "Start",
+      "duration": "Duration (min)",
+      "everyone": "Everyone",
+      "room": "Hall (optional)",
+      "roomPlaceholder": "e.g. Hall 1",
+      "delete": "Delete",
+      "confirmDelete": "Delete “{{name}}”?",
+      "min": "min"
+    },
+    "detail": {
+      "open": "Details",
+      "openGrades": "Grades",
+      "age": "Age",
+      "height": "Height",
+      "weight": "Weight",
+      "phone": "Phone",
+      "email": "Email",
+      "name": "Name",
+      "close": "Close",
+      "managedNote": "Something wrong or missing? Message us and we will fix it."
+    },
+    "grades": {
+      "title": "Grades",
+      "give": "New grade",
+      "notePlaceholder": "Note (optional), e.g. \"Great technique\"",
+      "save": "Give grade",
+      "error": "The grade was not saved. Try again.",
+      "none": "No grades yet.",
+      "delete": "Delete grade",
+      "count_one": "{{count}} grade",
+      "count_other": "{{count}} grades"
+    },
+    "reservations": {
+      "title": "Store reservations",
+      "note": "What students reserved in the site store, with height and age so you bring the right size. Payment happens at the hall.",
+      "group": "Group",
+      "status": {
+        "new": "New",
+        "ready": "Ready",
+        "done": "Picked up",
+        "cancelled": "Cancelled"
+      },
+      "mark": {
+        "ready": "Ready for pickup",
+        "done": "Handed over"
+      },
+      "cancel": "Cancel",
+      "filter": {
+        "open": "Open",
+        "done": "Handed over",
+        "all": "All"
+      },
+      "empty": "No reservations here."
+    },
+    "qr": {
+      "title": "Hall QR check-in",
+      "note": "Print the code and put it up at the hall entrance. A student scans it with their phone camera and is marked present for the class that is on right now.",
+      "error": "QR check-in is not enabled for this club. Message us to turn it on.",
+      "posterTitle": "Scan when you arrive",
+      "alt": "QR code for attendance check-in",
+      "posterSteps": "Open the camera, point it at the code and tap the link. Log in if asked.",
+      "print": "Print",
+      "rotate": "Change the code",
+      "rotateWarning": "The old code stops working right away. You will need to print the new one.",
+      "rotateConfirm": "Change it"
+    }
+  },
+  "offline": {
+    "banner": "No connection — showing the last data that loaded."
+  },
+  "suspended": {
+    "title": "Site temporarily unavailable",
+    "body": "This club's site is currently paused. If you're a member, please contact your coach for details."
+  },
+  "checkin": {
+    "working": "Checking you in...",
+    "done": "You are checked in!",
+    "already": "Already checked in",
+    "failTitle": "That did not work",
+    "toApp": "Go to the app",
+    "errors": {
+      "bad_code": "This code is not valid. It may have been changed; scan the code in the hall.",
+      "not_member": "This account is not a student of the club.",
+      "no_class": "There is no class for your group right now. Scan up to 45 minutes before it starts.",
+      "unknown": "Something went wrong. Try again or tell your coach."
+    }
+  },
+  "grades": {
+    "title": "My grades from the coach",
+    "none": "No grades yet."
+  },
+  "install": {
+    "button": "Add to phone",
+    "sub": "With the club icon, like a real app",
+    "why": "Open the schedule, payments and news with one tap from your home screen.",
+    "title": "Add to home screen",
+    "ios1": "Tap the Share button",
+    "ios2": "Choose \"Add to Home Screen\"",
+    "ios3": "Done, the club icon is on your phone",
+    "other1": "Open the browser menu (⋮)",
+    "other2": "Choose \"Install app\" or \"Add to home screen\"",
+    "iosSafari": "On iPhone this only works from Safari.",
+    "ok": "Got it",
+    "desktop1": "Open the site in Chrome or Edge",
+    "desktop2": "Click the install icon on the right of the address bar (a screen with an arrow)",
+    "desktop3": "Done, the app opens in its own window",
+    "buttonDesktop": "Install the app",
+    "subDesktop": "In its own window, with the club icon",
+    "titleDesktop": "Install on your computer"
+  },
+  "club": {
+    "notFound": "Club not found",
+    "toMyClubs": "To my clubs",
+    "noAccessTitle": "No access",
+    "noAccessBody": "Your account is not part of {{club}}. If it should be, ask your coach.",
+    "noneTitle": "No club yet",
+    "noneBody": "Your account has not been added to a club yet. Ask your coach.",
+    "pickTitle": "Choose a club",
+    "myClubs": "My clubs",
+    "default": "Default",
+    "makeDefault": "Make default"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "paymentShowcase": {
+    "mock": {
+      "history": "History"
+    }
+  }
+}
