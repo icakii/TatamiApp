@@ -38,8 +38,8 @@ export type CheckinError = 'bad_code' | 'not_member' | 'no_class' | 'unknown'
 
 export function useCheckIn() {
   return useMutation({
-    mutationFn: async (token: string): Promise<CheckinResult> => {
-      const { data, error } = await supabase.rpc('qr_check_in', { p_token: token })
+    mutationFn: async ({ token, memberId }: { token: string; memberId?: string }): Promise<CheckinResult> => {
+      const { data, error } = await supabase.rpc('qr_check_in', { p_token: token, p_member_id: memberId ?? null })
       if (error) {
         const known = (['bad_code', 'not_member', 'no_class'] as const).find((c) => error.message.includes(c))
         throw new Error(known ?? 'unknown')

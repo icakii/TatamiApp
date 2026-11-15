@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import type { AdminMember } from '../../hooks/useAdminMembers'
 import { useAddGrade, useDeleteGrade, useMemberGrades } from '../../hooks/useGrades'
 import { beltLabel } from '../../lib/belts'
+import { maskEgn } from '../../lib/egn'
 import { Stars } from '../Stars'
 import { MemberAvatar } from './MemberAvatar'
 
@@ -26,11 +27,13 @@ export function MemberDetailModal({
   member,
   gradesEnabled,
   onClose,
+  onEdit,
 }: {
   clubId: string
   member: AdminMember
   gradesEnabled: boolean
   onClose: () => void
+  onEdit?: () => void
 }) {
   const { t, i18n } = useTranslation()
   const { data: grades } = useMemberGrades(gradesEnabled ? member.id : undefined)
@@ -39,6 +42,7 @@ export function MemberDetailModal({
   const [stars, setStars] = useState(0)
   const [note, setNote] = useState('')
   const [error, setError] = useState(false)
+  const [showEgn, setShowEgn] = useState(false)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -116,7 +120,31 @@ export function MemberDetailModal({
             <Field label={t('admin.detail.email')} value={member.guardian_email} />
           </div>
         </div>
-        <p className="mt-4 text-xs text-muted-2">{t('admin.detail.managedNote')}</p>
+        <div className="mt-4 grid gap-3 rounded-2xl border border-ink/10 p-4 text-sm sm:grid-cols-2">
+          <div className="min-w-0">
+            <p className={labelClass}>{t('admin.student.egn')}</p>
+            {member.egn ? (
+              <button type="button" onClick={() => setShowEgn((v) => !v)} className="font-mono tracking-wider text-ink" aria-label={t('admin.student.showEgn')}>
+                {showEgn ? member.egn : maskEgn(member.egn)}
+              </button>
+            ) : (
+              <p className="text-ink">-</p>
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className={labelClass}>{t('admin.student.appLogin')}</p>
+            <p className="text-ink">{member.user_id ? t('admin.student.hasLogin') : t('admin.student.noLogin')}</p>
+          </div>
+        </div>
+        {onEdit && member.role === 'student' && (
+          <button
+            type="button"
+            onClick={onEdit}
+            className="mt-4 min-h-11 w-full rounded-xl border border-ink/15 font-display text-xs uppercase tracking-wide text-ink transition-colors hover:border-aka-text hover:text-aka-text"
+          >
+            ✎ {t('admin.student.editButton')}
+          </button>
+        )}
 
         {gradesEnabled && member.role === 'student' && (
           <div className="mt-6 border-t border-ink/10 pt-5">

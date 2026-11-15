@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useClub } from '../hooks/useClub'
-import { useMember } from '../hooks/useMember'
+import { useStaffMember } from '../hooks/useMember'
 
 export function AdminRoute({ children }: { children: ReactNode }) {
   const { t } = useTranslation()
   const { data: club } = useClub()
-  const { data: member, isLoading } = useMember(club?.id)
+  const { data: member, isLoading } = useStaffMember(club?.id)
 
   if (isLoading) {
     return <div className="flex min-h-screen items-center justify-center text-muted">...</div>

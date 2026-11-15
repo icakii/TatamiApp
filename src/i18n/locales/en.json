@@ -280,7 +280,14 @@
     "upcoming": "Upcoming",
     "noUpcoming": "No upcoming competitions.",
     "myResults": "My results",
-    "noResults": "No results yet."
+    "noResults": "No results yet.",
+    "add": "Add competition",
+    "name": "Competition name",
+    "date": "Date",
+    "place": "Place",
+    "save": "Add",
+    "error": "That didn't work. Try again.",
+    "delete": "Remove competition"
   },
   "studentHome": {
     "greeting": "Hi, {{name}}",
@@ -347,7 +354,6 @@
     },
     "members": {
       "title": "Members",
-      "viewOnlyNote": "Student details (photo, contacts, parents, belt, group) are entered by us. If something needs changing, message us. You mark attendance and paid fees.",
       "searchPlaceholder": "Search by name",
       "allBelts": "All belts",
       "allStatuses": "All statuses",
@@ -398,6 +404,12 @@
         "not_behind": "The student is not 3 months behind",
         "email_not_configured": "Email is not set up yet",
         "send_failed": "The email was not sent"
+      },
+      "method": {
+        "label": "Paid by",
+        "cash": "Cash",
+        "card": "Card (POS)",
+        "bank": "Bank"
       }
     },
     "attendance": {
@@ -504,6 +516,36 @@
       "rotate": "Change the code",
       "rotateWarning": "The old code stops working right away. You will need to print the new one.",
       "rotateConfirm": "Change it"
+    },
+    "student": {
+      "addButton": "Student",
+      "addTitle": "New student",
+      "editTitle": "Student details",
+      "editButton": "Edit details",
+      "name": "Full name",
+      "egn": "Personal number (EGN)",
+      "egnInvalid": "This EGN is not valid. Check the digits.",
+      "showEgn": "Show EGN",
+      "birthYear": "Birth year",
+      "training": "Training",
+      "group": "Group",
+      "belt": "Belt",
+      "fee": "Monthly fee (€)",
+      "status": "Status",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "makeLogin": "Create an app login",
+      "loginEmail": "Login email (the parent's for young children)",
+      "password": "Password",
+      "newPassword": "New password",
+      "loginHint": "If the parent already has a login in the club (with another child), the new child is added to that login and the password stays the same.",
+      "loginMade": "Login created.\nEmail: {{email}}\nPassword: {{password}}\n\nGive these to the student or parent. They can change the password via \"Forgot password\".",
+      "linked": "The child was added to {{email}}'s login. The parent can switch between children in the app.",
+      "save": "Save",
+      "none": "No students match these filters.",
+      "appLogin": "App login",
+      "hasLogin": "Yes",
+      "noLogin": "None (add it via \"Edit\")"
     }
   },
   "offline": {
@@ -569,5 +611,8 @@
     "mock": {
       "history": "History"
     }
+  },
+  "family": {
+    "switch": "Switch child"
   }
 }

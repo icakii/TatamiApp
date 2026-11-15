@@ -11,7 +11,7 @@ import { InstallButton } from '../../components/InstallButton'
 import { LegalLinks } from '../../components/LegalLinks'
 import { useAuth } from '../../hooks/useAuth'
 import { useClub, useClubPath } from '../../hooks/useClub'
-import { useMember } from '../../hooks/useMember'
+import { useMember, useStaffMember } from '../../hooks/useMember'
 
 const LANGS = ['bg', 'en'] as const
 
@@ -19,6 +19,7 @@ export function Profile() {
   const { t, i18n } = useTranslation()
   const { data: club } = useClub()
   const { data: member } = useMember(club?.id)
+  const { data: staff } = useStaffMember(club?.id)
   const { signOut } = useAuth()
   const navigate = useNavigate()
   const path = useClubPath()
@@ -103,7 +104,7 @@ export function Profile() {
           </div>
         </StaggerItem>
 
-        {(member?.role === 'owner' || member?.role === 'coach') && (
+        {staff && (
           <StaggerItem>
             <Link to={path('/admin')} className={actionClass}>
               {t('admin.title')}

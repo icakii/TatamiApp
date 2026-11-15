@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import type { Session } from '@supabase/supabase-js'
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { supabase } from '../lib/supabaseClient'
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -23,12 +25,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false)
     })
 
+    let lastUser: string | null | undefined
     const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession)
+      // A different person on this device: drop the previous one's data,
+      // both in memory and in the service worker's offline copy of the API.
+      const user = newSession?.user.id ?? null
+      if (lastUser !== undefined && user !== lastUser) {
+        queryClient.clear()
+        if ('caches' in window) caches.delete('supabase-api-cache').catch(() => {})
+      }
+      lastUser = user
     })
 
     return () => listener.subscription.unsubscribe()
-  }, [])
+  }, [queryClient])
 
   async function signIn(email: string, password: string) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })

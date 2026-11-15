@@ -18,7 +18,7 @@ function daysBetween(fromIso: string, to: Date): number {
 }
 
 // Deliberately simple: red row = not paid, one green button to mark the month
-// paid (cash), a small undo for mistakes. Three months behind gets a flag so
+// paid (cash, POS card or bank, picked once at the top), a small undo for mistakes. Three months behind gets a flag so
 // the coach can check whether the student has quit.
 export function Payments() {
   const { t } = useTranslation()
@@ -29,6 +29,7 @@ export function Payments() {
   const undoPayment = useUndoLastPayment(club?.id)
   const sendReminder = useSendDuesReminder(club?.id)
   const [reminderNote, setReminderNote] = useState<Record<string, string>>({})
+  const [method, setMethod] = useState<PayMethod>(readMethod)
 
   const now = new Date()
   const today = localISODate(now)
@@ -50,6 +51,8 @@ export function Payments() {
           <StatCard label={t('admin.payments.expected')} value={formatEur(expected)} kanji="月" tone="bg-kin" />
         </div>
       </div>
+
+      <MethodPicker value={method} onChange={(m) => (setMethod(m), saveMethod(m))} />
 
       <Stagger className="mt-5 space-y-2">
         {sorted.map((m) => {
@@ -127,7 +130,7 @@ export function Payments() {
                       recordPayment.mutate({
                         memberId: m.id,
                         amountCents: m.monthly_fee_cents ?? 0,
-                        method: 'cash',
+                        method,
                         paidThrough: through,
                       })
                     }
@@ -141,6 +144,52 @@ export function Payments() {
           )
         })}
       </Stagger>
+    </div>
+  )
+}
+
+// How the club takes the money; clubs mostly use cash or their POS terminal.
+// Remembered on this device, applied to every "Платено" tap.
+type PayMethod = 'cash' | 'card' | 'bank'
+const METHOD_KEY = 'tatami-pay-method'
+const readMethod = (): PayMethod => {
+  try {
+    const v = localStorage.getItem(METHOD_KEY)
+    return v === 'card' || v === 'bank' ? v : 'cash'
+  } catch {
+    return 'cash'
+  }
+}
+const saveMethod = (m: PayMethod) => {
+  try {
+    localStorage.setItem(METHOD_KEY, m)
+  } catch {
+    // Not remembered; still used for this session.
+  }
+}
+
+function MethodPicker({ value, onChange }: { value: PayMethod; onChange: (m: PayMethod) => void }) {
+  const { t } = useTranslation()
+  return (
+    <div className="mt-5">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{t('admin.payments.method.label')}</p>
+      <div className="mt-2 flex gap-1 rounded-2xl border border-ink/10 bg-shiro/95 p-1" role="radiogroup">
+        {(['cash', 'card', 'bank'] as const).map((m) => (
+          <button
+            key={m}
+            type="button"
+            role="radio"
+            aria-checked={value === m}
+            onClick={() => onChange(m)}
+            className={`relative min-h-10 flex-1 rounded-xl font-display text-xs uppercase tracking-wide ${value === m ? 'text-shiro' : 'text-muted'}`}
+          >
+            {value === m && (
+              <motion.span layoutId="pay-method" className="absolute inset-0 rounded-xl bg-ink" transition={{ type: 'spring', stiffness: 420, damping: 34 }} />
+            )}
+            <span className="relative">{t(`admin.payments.method.${m}`)}</span>
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

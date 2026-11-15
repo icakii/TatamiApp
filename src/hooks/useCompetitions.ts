@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '../lib/supabaseClient'
 
 export interface Competition {
@@ -23,9 +23,30 @@ export interface MyCompetitionEntry extends CompetitionEntry {
   competition: Competition
 }
 
-// Read-only: competitions and entries are managed from TatamiHub's Hub,
-// not self-service here. This mirrors the members/classes/groups pattern,
-// not attendance's coach-writable exception.
+// Coaches add upcoming competitions themselves (2026-11-15); entries and
+// results are still entered from the Hub.
+export function useSaveCompetition(clubId: string | undefined) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (c: { name: string; event_date: string; location: string | null; notes: string | null }) => {
+      const { error } = await supabase.from('competitions').insert({ ...c, club_id: clubId })
+      if (error) throw error
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['competitions', clubId] }),
+  })
+}
+
+export function useDeleteCompetition(clubId: string | undefined) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('competitions').delete().eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['competitions', clubId] }),
+  })
+}
+
 export function useCompetitions(clubId: string | undefined) {
   return useQuery({
     queryKey: ['competitions', clubId],

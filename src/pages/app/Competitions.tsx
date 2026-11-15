@@ -1,10 +1,10 @@
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Eyebrow, PageHeader, Stagger, StaggerItem } from '../../components/app/ui'
 import { useClub } from '../../hooks/useClub'
-import { useCompetitions, useMyCompetitionEntries } from '../../hooks/useCompetitions'
-import { useMember } from '../../hooks/useMember'
+import { useCompetitions, useDeleteCompetition, useMyCompetitionEntries, useSaveCompetition } from '../../hooks/useCompetitions'
+import { useMember, useStaffMember } from '../../hooks/useMember'
 import { localISODate } from '../../lib/date'
 
 const MEDAL_EMOJI: Record<string, string> = { gold: '🥇', silver: '🥈', bronze: '🥉' }
@@ -31,6 +31,8 @@ export function Competitions() {
   const { data: member } = useMember(club?.id)
   const { data: competitions } = useCompetitions(club?.id)
   const { data: myEntries } = useMyCompetitionEntries(club?.id, member?.id)
+  const { data: staff } = useStaffMember(club?.id)
+  const remove = useDeleteCompetition(club?.id)
 
   const todayISO = localISODate()
   const upcoming = (competitions ?? [])
@@ -90,6 +92,11 @@ export function Competitions() {
         <StaggerItem>
           <Eyebrow className="px-1 pt-2">{t('competitions.upcoming')}</Eyebrow>
         </StaggerItem>
+        {staff && (
+          <StaggerItem>
+            <AddCompetition clubId={club?.id} />
+          </StaggerItem>
+        )}
         {upcoming.length === 0 ? (
           <StaggerItem>
             <Card>
@@ -114,6 +121,16 @@ export function Competitions() {
                     {c.location && <p className="truncate text-xs text-muted">{c.location}</p>}
                   </div>
                   {entered && <span className="text-lg">🏆</span>}
+                  {staff && (
+                    <button
+                      type="button"
+                      onClick={() => remove.mutate(c.id)}
+                      className="shrink-0 rounded-full px-2 py-1 text-xs text-muted hover:text-aka-text"
+                      aria-label={t('competitions.delete')}
+                    >
+                      ✕
+                    </button>
+                  )}
                 </Card>
               </StaggerItem>
             )
@@ -162,5 +179,60 @@ export function Competitions() {
         )}
       </Stagger>
     </div>
+  )
+}
+
+// Coaches put the next tournament in themselves; it shows to every student.
+function AddCompetition({ clubId }: { clubId: string | undefined }) {
+  const { t } = useTranslation()
+  const save = useSaveCompetition(clubId)
+  const [open, setOpen] = useState(false)
+  const [form, setForm] = useState({ name: '', event_date: '', location: '' })
+  const field = 'mt-1 min-h-11 w-full rounded-xl border border-ink/15 bg-kuro px-3 text-ink outline-none focus:border-aka-text'
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault()
+    await save.mutateAsync({ name: form.name.trim(), event_date: form.event_date, location: form.location.trim() || null, notes: null })
+    setForm({ name: '', event_date: '', location: '' })
+    setOpen(false)
+  }
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-aka/40 font-display text-xs uppercase tracking-wide text-aka-text transition-colors hover:bg-aka/5"
+      >
+        + {t('competitions.add')}
+      </button>
+    )
+  }
+  return (
+    <form onSubmit={onSubmit} className="space-y-3 rounded-2xl border border-ink/10 bg-shiro/95 p-4">
+      <label className="block">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{t('competitions.name')}</span>
+        <input required maxLength={120} value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className={field} />
+      </label>
+      <div className="grid grid-cols-2 gap-3">
+        <label className="block">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{t('competitions.date')}</span>
+          <input required type="date" min={localISODate()} value={form.event_date} onChange={(e) => setForm((f) => ({ ...f, event_date: e.target.value }))} className={field} />
+        </label>
+        <label className="block">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{t('competitions.place')}</span>
+          <input maxLength={120} value={form.location} onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))} className={field} />
+        </label>
+      </div>
+      {save.error && <p className="text-sm text-aka-text">{t('competitions.error')}</p>}
+      <div className="grid grid-cols-2 gap-3">
+        <button type="button" onClick={() => setOpen(false)} className="min-h-11 rounded-xl border border-ink/15 font-display text-xs uppercase tracking-wide text-muted">
+          {t('admin.edit.cancel')}
+        </button>
+        <button type="submit" disabled={save.isPending} className="min-h-11 rounded-xl bg-aka font-display text-xs uppercase tracking-wide text-shiro disabled:opacity-60">
+          {save.isPending ? '...' : t('competitions.save')}
+        </button>
+      </div>
+    </form>
   )
 }

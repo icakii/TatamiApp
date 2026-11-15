@@ -1,15 +1,17 @@
+import { AnimatePresence } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MemberDetailModal } from '../../components/admin/MemberDetailModal'
-import { Stars } from '../../components/Stars'
-import { useClubGradeAverages } from '../../hooks/useGrades'
 import { MemberAvatar } from '../../components/admin/MemberAvatar'
+import { MemberDetailModal } from '../../components/admin/MemberDetailModal'
+import { StudentFormModal } from '../../components/admin/StudentFormModal'
 import { Pill, StatCard } from '../../components/admin/ui'
 import { PageHeader, Stagger, StaggerItem } from '../../components/app/ui'
+import { Stars } from '../../components/Stars'
 import { useAdminMembers, type AdminMember } from '../../hooks/useAdminMembers'
 import { useBelts } from '../../hooks/useBelts'
-import { beltLabel } from '../../lib/belts'
 import { useClub } from '../../hooks/useClub'
+import { useClubGradeAverages } from '../../hooks/useGrades'
+import { beltLabel } from '../../lib/belts'
 
 const STATUSES = ['active', 'trial', 'paused', 'left'] as const
 
@@ -29,17 +31,20 @@ const ROLE_AVATAR: Record<AdminMember['role'], string> = {
 const fieldClass =
   'min-h-11 rounded-xl border border-ink/15 bg-shiro/95 px-3 text-ink outline-none transition-colors focus:border-aka-text'
 
+// Compact roster: one tidy row per person. Contacts, parent, ЕГН and grades
+// open in the profile sheet; coaches add and edit students from here.
 export function Members() {
   const { t, i18n } = useTranslation()
   const { data: club } = useClub()
   const { data: members, isLoading } = useAdminMembers(club?.id)
   const { data: belts } = useBelts(club?.id)
+  const { data: averages } = useClubGradeAverages(club?.id, !!club?.grades_enabled)
 
   const [search, setSearch] = useState('')
   const [beltFilter, setBeltFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
-  const [editing, setEditing] = useState<AdminMember | null>(null)
-  const { data: averages } = useClubGradeAverages(club?.id, !!club?.grades_enabled)
+  const [open, setOpen] = useState<AdminMember | null>(null)
+  const [form, setForm] = useState<{ member?: AdminMember } | null>(null)
 
   const filtered = useMemo(() => {
     return (members ?? []).filter((m) => {
@@ -56,8 +61,15 @@ export function Members() {
 
   return (
     <div className="px-5 py-6">
-      <PageHeader kanji="人" title={t('admin.members.title')} tone="bg-ai" />
-      <p className="mt-2 text-sm text-muted">{t('admin.members.viewOnlyNote')}</p>
+      <PageHeader kanji="人" title={t('admin.members.title')} tone="bg-ai">
+        <button
+          type="button"
+          onClick={() => setForm({})}
+          className="shrink-0 rounded-full bg-aka px-4 py-2.5 font-display text-xs uppercase tracking-wide text-shiro shadow-[0_10px_20px_-10px_rgba(194,54,31,0.9)] transition-transform active:scale-95"
+        >
+          + {t('admin.student.addButton')}
+        </button>
+      </PageHeader>
 
       <div className="mt-5 grid grid-cols-3 gap-3">
         <StatCard label={t('admin.status.active')} value={count('active')} kanji="活" tone="bg-jade" />
@@ -92,95 +104,65 @@ export function Members() {
 
       {isLoading && <p className="p-6 text-center text-muted">...</p>}
 
-      <Stagger key={`${search}|${beltFilter}|${statusFilter}`} className="mt-4 grid gap-3 md:grid-cols-2">
+      <Stagger
+        key={`${search}|${beltFilter}|${statusFilter}`}
+        className="mt-4 overflow-hidden rounded-2xl border border-ink/10 bg-shiro/95 shadow-[0_16px_32px_-24px_rgba(31,27,22,0.55)]"
+      >
         {filtered.map((m) => (
           <StaggerItem key={m.id}>
-            <div className="h-full rounded-2xl border border-ink/10 bg-shiro/95 p-4 shadow-[0_16px_32px_-24px_rgba(31,27,22,0.55)]">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
-                  <MemberAvatar name={m.full_name} photoPath={m.photo_path} tone={ROLE_AVATAR[m.role]} />
-                  <div className="min-w-0">
-                    <p className="truncate font-display font-semibold uppercase tracking-wide text-ink">
-                      {m.full_name}
-                    </p>
-                    <p className="text-xs text-muted">{t(`admin.role.${m.role}`)}</p>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-2">
-                  <Pill tone={STATUS_TONE[m.status]}>{t(`admin.status.${m.status}`)}</Pill>
-                  <button
-                    type="button"
-                    onClick={() => setEditing(m)}
-                    className="rounded-full border border-ink/15 px-3 py-1 font-display text-[11px] uppercase tracking-wide text-muted transition-colors hover:border-aka-text hover:text-aka-text"
-                  >
-                    {club.grades_enabled && m.role === 'student' ? `★ ${t('admin.detail.openGrades')}` : t('admin.detail.open')}
-                  </button>
-                </div>
-              </div>
-
-              {averages?.[m.id] && (
-                <div className="mt-3 flex items-center gap-2">
-                  <Stars value={averages[m.id].avg} size="h-4 w-4" />
-                  <span className="text-xs text-muted">
-                    {averages[m.id].avg.toFixed(1)} · {t('admin.grades.count', { count: averages[m.id].count })}
-                  </span>
-                </div>
-              )}
-
-              {m.belt && (
-                <div className="mt-3 flex items-center gap-2">
-                  <span
-                    className="h-2.5 w-10 rounded-full ring-1 ring-ink/15"
-                    style={{
-                      background: m.belt.color2_hex
-                        ? `linear-gradient(${m.belt.color_hex} 38%, ${m.belt.color2_hex} 38% 62%, ${m.belt.color_hex} 62%)`
-                        : m.belt.color_hex,
-                    }}
-                  />
-                  <span className="text-xs uppercase tracking-wide text-muted">
-                    {beltLabel(m.belt, i18n.resolvedLanguage)}
-                  </span>
-                </div>
-              )}
-
-              <div className="mt-3 grid gap-3 border-t border-ink/10 pt-3 text-sm sm:grid-cols-2">
-                <div className="min-w-0">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
-                    {t('admin.members.contact')}
-                  </p>
-                  <p className="truncate text-ink">{m.email ?? '-'}</p>
-                  <p className="text-ink">{m.phone ?? '-'}</p>
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
-                    {t('admin.members.guardian')}
-                  </p>
-                  {m.guardian_first_name ? (
+            <button
+              type="button"
+              onClick={() => setOpen(m)}
+              className="flex w-full items-center gap-3 border-b border-ink/10 px-4 py-3 text-left transition-colors last:border-0 hover:bg-kuro/60"
+            >
+              <MemberAvatar name={m.full_name} photoPath={m.photo_path} tone={ROLE_AVATAR[m.role]} className="h-10 w-10 text-xs" />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate font-display text-sm font-semibold uppercase tracking-wide text-ink">{m.full_name}</span>
+                <span className="mt-0.5 flex items-center gap-2 text-xs text-muted">
+                  {m.belt ? (
                     <>
-                      <p className="text-ink">
-                        {[m.guardian_first_name, m.guardian_last_name].filter(Boolean).join(' ')}
-                      </p>
-                      <p className="text-ink">{m.guardian_phone ?? '-'}</p>
-                      {m.guardian_email && <p className="truncate text-ink">{m.guardian_email}</p>}
+                      <span
+                        className="h-2 w-6 shrink-0 rounded-full ring-1 ring-ink/15"
+                        style={{
+                          background: m.belt.color2_hex
+                            ? `linear-gradient(${m.belt.color_hex} 38%, ${m.belt.color2_hex} 38% 62%, ${m.belt.color_hex} 62%)`
+                            : m.belt.color_hex,
+                        }}
+                      />
+                      <span className="truncate">{beltLabel(m.belt, i18n.resolvedLanguage)}</span>
                     </>
                   ) : (
-                    <p className="text-muted">-</p>
+                    <span>{t(`admin.role.${m.role}`)}</span>
                   )}
-                </div>
-              </div>
-            </div>
+                  {averages?.[m.id] && <Stars value={averages[m.id].avg} size="h-3 w-3" />}
+                </span>
+              </span>
+              <Pill tone={STATUS_TONE[m.status]}>{t(`admin.status.${m.status}`)}</Pill>
+              <span className="text-muted" aria-hidden="true">
+                ›
+              </span>
+            </button>
           </StaggerItem>
         ))}
       </Stagger>
+      {!isLoading && filtered.length === 0 && <p className="mt-6 text-center text-sm text-muted">{t('admin.student.none')}</p>}
 
-      {editing && (
-        <MemberDetailModal
-          clubId={club.id}
-          member={editing}
-          gradesEnabled={club.grades_enabled}
-          onClose={() => setEditing(null)}
-        />
-      )}
+      <AnimatePresence>
+        {open && (
+          <MemberDetailModal
+            key="detail"
+            clubId={club.id}
+            member={open}
+            gradesEnabled={club.grades_enabled}
+            onClose={() => setOpen(null)}
+            onEdit={() => {
+              setForm({ member: open })
+              setOpen(null)
+            }}
+          />
+        )}
+        {form && <StudentFormModal key="form" clubId={club.id} member={form.member} onClose={() => setForm(null)} />}
+      </AnimatePresence>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { KanjiBackdrop } from '../components/KanjiBackdrop'
 import { ClubLogo } from '../components/ClubLogo'
 import { useClub, useClubPath } from '../hooks/useClub'
 import { OfflineBanner } from '../components/OfflineBanner'
+import { ChildSwitcher } from '../components/app/ChildSwitcher'
 
 const TABS: { to: string; end: boolean; key: string; icon: ReactNode }[] = [
   { to: '', end: true, key: 'home', icon: <HomeIcon /> },
@@ -37,6 +38,7 @@ export function AppLayout() {
           </span>
         </div>
       </header>
+      <ChildSwitcher />
 
       {/* Capped width: this is a phone app, not a desktop dashboard. */}
       <main className="mx-auto w-full max-w-md flex-1">

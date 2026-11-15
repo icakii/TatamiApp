@@ -9,4 +9,23 @@ if (!supabaseUrl || !supabaseAnonKey) {
   )
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Stay signed in on this device until the person signs out: the session is
+// kept in localStorage and refreshed automatically.
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storageKey: 'tatami-auth',
+  },
+})
+
+// Phones freeze background tabs and installed apps, so the refresh timer can
+// miss the moment the access token expires. Refresh on the way back instead
+// of letting the first request fail.
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') supabase.auth.startAutoRefresh()
+    else supabase.auth.stopAutoRefresh()
+  })
+}

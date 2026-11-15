@@ -6,7 +6,7 @@ import { ClubLogo } from '../components/ClubLogo'
 import { LegalLinks } from '../components/LegalLinks'
 import { useAuth } from '../hooks/useAuth'
 import { useClub, useClubPath } from '../hooks/useClub'
-import { useMember } from '../hooks/useMember'
+import { useStaffMember } from '../hooks/useMember'
 
 const TATAMI_URL = (import.meta.env.VITE_TATAMI_URL as string | undefined) || 'https://tatamistudio.net'
 
@@ -14,7 +14,7 @@ export function AdminLayout() {
   const { t } = useTranslation()
   const { signOut } = useAuth()
   const { data: club } = useClub()
-  const { data: member } = useMember(club?.id)
+  const { data: member } = useStaffMember(club?.id)
   const navigate = useNavigate()
   const location = useLocation()
   const outlet = useOutlet()

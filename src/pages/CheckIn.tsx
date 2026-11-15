@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import { KanjiBackdrop } from '../components/KanjiBackdrop'
 import { useCheckIn, type CheckinError } from '../hooks/useCheckin'
 import { useClub, useClubPath } from '../hooks/useClub'
+import { useMember } from '../hooks/useMember'
 import { ClubLogo } from '../components/ClubLogo'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
@@ -18,13 +19,15 @@ export function CheckIn() {
   const checkIn = useCheckIn()
   const reduced = useReducedMotion()
   const fired = useRef(false)
+  // The child selected in the app (a parent can have several in the club).
+  const { data: member } = useMember(club?.id)
 
   useEffect(() => {
     // Once per visit, even under StrictMode's double effect.
-    if (!token || fired.current) return
+    if (!token || !member || fired.current) return
     fired.current = true
-    checkIn.mutate(token)
-  }, [token, checkIn])
+    checkIn.mutate({ token, memberId: member.id })
+  }, [token, member, checkIn])
 
   const ok = checkIn.data
   const err = checkIn.error ? (checkIn.error.message as CheckinError) : null
