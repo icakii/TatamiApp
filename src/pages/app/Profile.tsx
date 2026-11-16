@@ -125,7 +125,7 @@ export function Profile() {
               navigate(path('/login'), { replace: true })
               await signOut()
             }}
-            className="min-h-12 w-full rounded-2xl bg-aka px-4 font-display text-sm uppercase tracking-wide text-shiro shadow-[0_12px_24px_-12px_rgba(194,54,31,0.9)] transition-transform active:scale-[0.98]"
+            className="min-h-12 w-full rounded-2xl bg-aka px-4 font-display text-sm uppercase tracking-wide text-shiro shadow-[0_12px_24px_-12px_color-mix(in_srgb,var(--color-aka)_90%,transparent)] transition-transform active:scale-[0.98]"
           >
             {t('profilePage.logout')}
           </button>

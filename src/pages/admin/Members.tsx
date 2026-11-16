@@ -65,7 +65,7 @@ export function Members() {
         <button
           type="button"
           onClick={() => setForm({})}
-          className="shrink-0 rounded-full bg-aka px-4 py-2.5 font-display text-xs uppercase tracking-wide text-shiro shadow-[0_10px_20px_-10px_rgba(194,54,31,0.9)] transition-transform active:scale-95"
+          className="shrink-0 rounded-full bg-aka px-4 py-2.5 font-display text-xs uppercase tracking-wide text-shiro shadow-[0_10px_20px_-10px_color-mix(in_srgb,var(--color-aka)_90%,transparent)] transition-transform active:scale-95"
         >
           + {t('admin.student.addButton')}
         </button>

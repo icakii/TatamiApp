@@ -305,7 +305,7 @@ function ReserveSheet({
           <button
             type="submit"
             disabled={reserve.isPending}
-            className="min-h-12 rounded-xl bg-aka font-display text-sm uppercase tracking-wide text-shiro shadow-[0_12px_24px_-12px_rgba(194,54,31,0.9)] disabled:opacity-60"
+            className="min-h-12 rounded-xl bg-aka font-display text-sm uppercase tracking-wide text-shiro shadow-[0_12px_24px_-12px_color-mix(in_srgb,var(--color-aka)_90%,transparent)] disabled:opacity-60"
           >
             {reserve.isPending ? '...' : t('store.reserve')}
           </button>

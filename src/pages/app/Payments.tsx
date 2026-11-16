@@ -29,7 +29,7 @@ export function Payments() {
           <div
             className={`relative overflow-hidden rounded-3xl p-6 text-shiro ${
               overdue
-                ? 'bg-linear-to-br from-aka to-aka-text shadow-[0_24px_48px_-24px_rgba(194,54,31,0.9)]'
+                ? 'bg-linear-to-br from-aka to-aka-text shadow-[0_24px_48px_-24px_color-mix(in_srgb,var(--color-aka)_90%,transparent)]'
                 : 'bg-linear-to-br from-jade to-[#1f4a36] shadow-[0_24px_48px_-24px_rgba(47,107,79,0.9)]'
             }`}
           >

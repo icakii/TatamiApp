@@ -156,7 +156,7 @@ export function DayDetailSheet({
                               className={`ml-auto min-h-10 rounded-xl px-4 font-display text-xs uppercase tracking-wide transition-colors ${
                                 signedUp
                                   ? 'border border-line text-muted'
-                                  : 'bg-aka text-shiro shadow-[0_8px_16px_-8px_rgba(194,54,31,0.9)]'
+                                  : 'bg-aka text-shiro shadow-[0_8px_16px_-8px_color-mix(in_srgb,var(--color-aka)_90%,transparent)]'
                               }`}
                             >
                               {signedUp ? t('schedule.cancelSignUp') : t('schedule.signUp')}

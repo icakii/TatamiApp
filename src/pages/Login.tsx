@@ -102,7 +102,7 @@ export function Login() {
           <button
             type="submit"
             disabled={submitting}
-            className="min-h-12 w-full rounded-xl bg-aka font-display text-sm uppercase tracking-wide text-shiro shadow-[0_12px_24px_-12px_rgba(194,54,31,0.9)] transition-transform active:scale-[0.98] disabled:opacity-60"
+            className="min-h-12 w-full rounded-xl bg-aka font-display text-sm uppercase tracking-wide text-shiro shadow-[0_12px_24px_-12px_color-mix(in_srgb,var(--color-aka)_90%,transparent)] transition-transform active:scale-[0.98] disabled:opacity-60"
           >
             {submitting ? t('auth.submitting') : t('auth.submit')}
           </button>

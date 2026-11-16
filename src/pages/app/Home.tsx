@@ -36,11 +36,11 @@ export function Home() {
             className="pointer-events-none absolute -bottom-8 -right-4 font-brush text-[9rem] leading-none text-shiro/10"
             aria-hidden="true"
           >
-            極
+            道
           </span>
           <div
             className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full"
-            style={{ background: 'radial-gradient(closest-side, rgba(194,54,31,0.45), transparent)' }}
+            style={{ background: 'radial-gradient(closest-side, color-mix(in_srgb,var(--color-aka)_45%,transparent), transparent)' }}
           />
           <p className="relative text-[10px] uppercase tracking-[0.25em] text-shiro/60">{club?.name}</p>
           <p className="relative mt-1 font-display text-3xl font-bold uppercase tracking-wide">
@@ -63,7 +63,7 @@ export function Home() {
 
       <StaggerItem>
         {nextClass ? (
-          <div className="relative flex overflow-hidden rounded-3xl bg-aka text-shiro shadow-[0_20px_40px_-20px_rgba(194,54,31,0.85)]">
+          <div className="relative flex overflow-hidden rounded-3xl bg-aka text-shiro shadow-[0_20px_40px_-20px_color-mix(in_srgb,var(--color-aka)_85%,transparent)]">
             <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-ink/15">
               <span className="font-brush text-5xl leading-none">{DAY_KANJI[nextClass.class.weekday]}</span>
             </div>

@@ -69,7 +69,7 @@ export function AppLayout() {
                   {isActive && (
                     <motion.span
                       layoutId="tab-pill"
-                      className="absolute inset-0 rounded-xl bg-aka shadow-[0_8px_18px_-8px_rgba(194,54,31,0.9)]"
+                      className="absolute inset-0 rounded-xl bg-aka shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--color-aka)_90%,transparent)]"
                       transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                     />
                   )}

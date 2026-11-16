@@ -212,7 +212,7 @@ export function Schedule() {
                     onClick={() => setOpenDate(iso)}
                     className={`relative flex aspect-square flex-col items-center justify-center rounded-xl text-sm transition-all duration-200 active:scale-90 ${
                       isOpen
-                        ? 'bg-aka font-semibold text-shiro shadow-[0_8px_16px_-8px_rgba(194,54,31,0.9)]'
+                        ? 'bg-aka font-semibold text-shiro shadow-[0_8px_16px_-8px_color-mix(in_srgb,var(--color-aka)_90%,transparent)]'
                         : isToday
                           ? 'bg-ai font-semibold text-shiro'
                           : hasClass
