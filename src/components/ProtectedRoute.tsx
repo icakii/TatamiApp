@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useClub, useClubSlug, useMyClubs } from '../hooks/useClub'
 import { useMember } from '../hooks/useMember'
 import { ClubLogo } from './ClubLogo'
+import { LegalGate } from './LegalGate'
 
 // Signed in, or off to the login (the club's own, branded one when inside a
 // club), coming back here afterwards.
@@ -32,7 +33,7 @@ export function MemberGate({ children }: { children: ReactNode }) {
   const { data: mine } = useMyClubs(session?.user.id)
 
   if (isLoading) return <div className="flex min-h-screen items-center justify-center text-muted">...</div>
-  if (member) return <>{children}</>
+  if (member) return <LegalGate>{children}</LegalGate>
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">

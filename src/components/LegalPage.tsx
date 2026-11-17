@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { useClub } from '../hooks/useClub'
 
 interface LegalSection {
   title: string
@@ -9,7 +10,10 @@ interface LegalSection {
 export function LegalPage({ namespace }: { namespace: 'privacy' | 'terms' }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const sections = t(`${namespace}.sections`, { returnObjects: true }) as LegalSection[]
+  // Under /<club>/privacy the club's own name fills in as the controller.
+  const { data: club } = useClub()
+  const vars = { club: club?.name ?? t('legalAccept.fallbackClub') }
+  const sections = t(`${namespace}.sections`, { returnObjects: true, ...vars }) as LegalSection[]
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
@@ -17,7 +21,7 @@ export function LegalPage({ namespace }: { namespace: 'privacy' | 'terms' }) {
       <p className="mt-2 text-xs uppercase tracking-wide text-muted-2">
         {t(`${namespace}.lastUpdated`)}
       </p>
-      <p className="mt-6 leading-relaxed text-muted">{t(`${namespace}.intro`)}</p>
+      <p className="mt-6 leading-relaxed text-muted">{t(`${namespace}.intro`, vars)}</p>
 
       <div className="mt-8 space-y-8">
         {sections.map((section) => (

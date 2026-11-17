@@ -29,168 +29,143 @@
     "signedUp": "You're signed up"
   },
   "privacy": {
-    "title": "Privacy Policy",
-    "lastUpdated": "Last updated: [date]",
-    "intro": "[Club name] (\"the club\", \"we\") runs this site and app to organize classes, belts, payments, and messages for its students. This page explains what personal data we collect, why, and what rights you have.",
+    "title": "Privacy policy",
+    "lastUpdated": "Last updated: 18 November 2026",
+    "intro": "This policy explains what personal data {{club}} (\"the club\") processes in its app, why, for how long, and what your rights are. The app runs on the Tatami Studio platform.",
     "sections": [
       {
-        "title": "What data we collect",
+        "title": "Who is responsible",
         "body": [
-          "For students: name, birth year (not a full birth date), belt, status at the club (active/trial/left), phone and email (optional), payment status.",
-          "For a parent/legal guardian (optional, for minor students): name, phone, email — used only to contact them about their child.",
-          "Login account: email address and password (the password is stored encrypted; we never see it in plain form).",
-          "Technical info: your chosen language (Bulgarian/English), and minimal on-device caching for offline access to your schedule and status (see \"Cookies\" below)."
+          "The controller is {{club}}. The club decides what data is collected and why. For questions and requests, contact the coach or the club.",
+          "Tatami Studio (tatamistudio.net) is the processor: it runs the app on the club's behalf under a written contract and does not use the data for its own purposes. Contact: hristo@varbanov.eu."
         ]
       },
       {
-        "title": "Why we collect this data",
+        "title": "What data we process",
         "body": [
-          "To organize classes and track a student's progress (belt, attendance).",
-          "To track payment status for the club's monthly fee.",
-          "To send messages about schedule changes or important news.",
-          "Payments in the app are recorded only — we do not process or store any card data."
+          "About the student: name, birth year, group, belt, club status, attendance (including QR check-in at the hall, if the club uses it), coach grades (if the club uses them), competitions, monthly fees paid (amount, date and method: cash, card on the POS terminal or bank) and club store reservations.",
+          "Optional: ЕГН (Bulgarian personal number), phone, email, photo, height and weight.",
+          "About a parent or guardian: name, phone and email, to get in touch about the child.",
+          "For logging in: a username or email and a password. The password is only stored encrypted and nobody can see it. We also record when you confirmed reading this policy.",
+          "Technical: chosen language, your login session and a temporary copy of the schedule on your device so the app works offline."
         ]
       },
       {
-        "title": "Children and guardian consent",
+        "title": "Purposes and legal basis",
         "body": [
-          "Many of our students are minors. For them we collect only a birth year, never a full date, and nothing beyond what's needed to run classes.",
-          "A student account is only ever created by a coach or club owner — there's no way for a stranger to self-register.",
-          "A coach's notes about a student are private and never shown to the student themselves or to any third party."
+          "Running classes, groups, belts, attendance and fees, i.e. performing the club membership (Art. 6(1)(b) GDPR).",
+          "Coach messages, grades and progress tracking: the club's legitimate interest in running its training (Art. 6(1)(f)).",
+          "ЕГН: only where needed to register students with the federation, for competitions and insurance. It is not required to use the app.",
+          "Height and weight: for kimono and equipment sizes and competition categories.",
+          "Photo: only so the coach recognises the student in the app. It is never published."
         ]
       },
       {
-        "title": "Who has access to the data",
+        "title": "Children",
         "body": [
-          "Coaches and the club owner can see their own club's students' data (including guardian contact info) but cannot add or edit members themselves — that's done by the Tatami team on their request.",
-          "The Tatami team (who runs the platform this site is built on) can manage data across every club to keep the service running.",
-          "No student or parent has access to another student's data."
+          "Most students are children. For children under 14 the data is provided, and the login used, by the parent or guardian. One login can cover several children in a family.",
+          "Logins are created only by the club coach. There is no open sign-up."
         ]
       },
       {
-        "title": "Cookies and local storage",
+        "title": "Who sees the data",
         "body": [
-          "We only use functional cookies/local storage: your chosen language, your login session, and caching your schedule/status for offline access in the app.",
-          "We don't use advertising or third-party tracking cookies."
+          "The club's coaches and management see the data of their own club's students. The ЕГН is hidden until tapped.",
+          "Parents see their own children's data. No student or parent ever sees another child's data.",
+          "The Tatami Studio team has access only as far as needed to maintain and fix the app.",
+          "Data is never sold or shared with advertisers."
         ]
       },
       {
-        "title": "Third parties that process data",
+        "title": "Where it is stored",
         "body": [
-          "Supabase — the app's database and hosting.",
-          "Render — hosts the site.",
-          "Resend — sends email notifications (only if the club has the email channel enabled).",
-          "We never sell or share personal data with advertisers."
+          "In a Supabase database on servers in the EU (Ireland). The app is served by Render. Both are providers we work with under data processing agreements and the EU standard contractual clauses.",
+          "Connections are encrypted, and every user can reach only the data their role allows."
         ]
       },
       {
-        "title": "How long we keep data",
+        "title": "How long",
         "body": [
-          "We keep active students' data for as long as they're members. After leaving, data is kept for a reasonable period for accounting purposes, unless you request earlier deletion (see \"Your rights\")."
+          "While the student is a club member. After they leave, the club deletes the data within 12 months unless the law requires keeping it longer.",
+          "You can ask for earlier deletion at any time."
         ]
       },
       {
         "title": "Your rights",
         "body": [
-          "You can request a copy of your data, ask us to correct it, or request full deletion.",
-          "A parent/guardian can do the same on behalf of a minor child.",
-          "To exercise these rights, contact us at the email below.",
-          "You have the right to file a complaint with your national data protection authority if you believe your rights have been violated."
+          "You have the right to access, correct, delete, restrict, object to and port your data. Write to the club or to hristo@varbanov.eu and we will reply within one month.",
+          "You can complain to the Bulgarian Commission for Personal Data Protection (www.cpdp.bg)."
         ]
       },
       {
-        "title": "Security",
+        "title": "Cookies",
         "body": [
-          "Data is transmitted encrypted (HTTPS). Row-level access control in the database ensures each user only ever sees the data they're allowed to."
-        ]
-      },
-      {
-        "title": "Changes to this policy",
-        "body": [
-          "We may update this page as needed. The last-updated date is shown at the top."
-        ]
-      },
-      {
-        "title": "Contact",
-        "body": [
-          "For questions about your personal data, write to: [contact email]"
+          "We only use necessary local storage: language, login and an offline copy of the schedule. No advertising or tracking cookies."
         ]
       }
     ],
-    "back": "Home"
+    "back": "Back"
   },
   "terms": {
-    "title": "Terms of Service",
-    "lastUpdated": "Last updated: [date]",
-    "intro": "These terms govern use of [Club name]'s site and app, built on the Tatami platform. By signing into your account, you agree to these terms.",
+    "title": "Terms of use",
+    "lastUpdated": "Last updated: 18 November 2026",
+    "intro": "These terms govern the use of {{club}}'s app, built on the Tatami Studio platform. By confirming them on your first login you accept them.",
     "sections": [
       {
-        "title": "What the service does",
+        "title": "What the app offers",
         "body": [
-          "The site gives students access to the class schedule, their belt status, payment status, and messages from the coach. The coach/owner panel shows the club's student info, view-only."
+          "The class schedule, belt and grades, attendance, fees paid, competitions, coach messages and, if the club uses them, the store and QR check-in.",
+          "Coaches have a panel where they manage their club's students, attendance, fees and messages."
         ]
       },
       {
-        "title": "Accounts and access",
+        "title": "Logging in",
         "body": [
-          "There's no self-registration — every account is created by a coach or club owner, or by the Tatami team on their request.",
-          "You're responsible for keeping your password secret. If you suspect unauthorized access, contact your coach immediately.",
-          "You can reset a forgotten password from the login page."
+          "Your login is created by the coach. Keep the password secret and change it in Profile after your first login.",
+          "If you lose your password or think someone else uses your login, tell the coach."
         ]
       },
       {
-        "title": "Payments",
+        "title": "Fees and store",
         "body": [
-          "Payment status in the app is informational only — recorded by hand by the coach/owner. The site does not currently process online payments; we never collect or store card data.",
-          "Actual payment arrangements for the monthly fee are made directly with the club."
+          "Fees are paid to the club in cash, by card or by bank transfer. The app only shows what the coach has recorded and takes no payments.",
+          "A store reservation is not a purchase: you pay and collect the item at the hall."
         ]
       },
       {
-        "title": "Minors",
+        "title": "Children",
         "body": [
-          "Many students are minors. A parent/guardian is responsible for giving consent when enrolling their child, per our Privacy Policy."
+          "For children under 14 the login is used by the parent or guardian, who is responsible for the data entered."
         ]
       },
       {
-        "title": "User responsibilities",
+        "title": "Acceptable use",
         "body": [
-          "Use the site only for its intended purpose. Attempting unauthorized access to another account or data isn't allowed.",
-          "Content (schedule, messages) is intended only for that club's own students."
+          "Use the app only as intended. Trying to access other people's data, or checking in with the QR code without being at the hall, is not allowed."
         ]
       },
       {
-        "title": "Limitation of liability",
+        "title": "Liability",
         "body": [
-          "The service is provided \"as is,\" with no guarantee of uninterrupted availability — we're still in an early stage of development.",
-          "The club is responsible for the actual classes and student safety during them; we only provide the management software."
+          "We do our best to keep the app running, but cannot guarantee it will never be interrupted.",
+          "The club is responsible for its classes and students' safety. Tatami Studio only provides the software."
         ]
       },
       {
-        "title": "Termination",
+        "title": "Ending",
         "body": [
-          "The club or Tatami may terminate account access for violating these terms. A student/parent may request account closure and data deletion at any time."
+          "You can ask for your login to be closed and your data deleted at any time. The club may suspend a login that breaks these terms."
         ]
       },
       {
-        "title": "Governing law",
+        "title": "Changes and law",
         "body": [
-          "These terms are governed by the laws of the Republic of Bulgaria."
-        ]
-      },
-      {
-        "title": "Changes to these terms",
-        "body": [
-          "We may update these terms as needed. The last-updated date is shown at the top."
-        ]
-      },
-      {
-        "title": "Contact",
-        "body": [
-          "For questions about these terms, write to: [contact email]"
+          "If these terms change we will ask you to confirm them again. Bulgarian law applies.",
+          "Contact: the club or hristo@varbanov.eu."
         ]
       }
     ],
-    "back": "Home"
+    "back": "Back"
   },
   "store": {
     "navLink": "Store",
@@ -643,5 +618,15 @@
   },
   "family": {
     "switch": "Switch child"
+  },
+  "legalAccept": {
+    "title": "Before you continue",
+    "body": "{{club}} keeps training data in this app: name, group, belt, attendance, fees and, where given, ЕГН, contacts and photo. Only the club coaches and you can see it.",
+    "readBoth": "I have read the Privacy policy and the Terms of use.",
+    "guardian": "I am the child's parent or guardian, or a student aged 14 or over.",
+    "continue": "Continue",
+    "logout": "Log out",
+    "error": "Could not save. Please try again.",
+    "fallbackClub": "the club"
   }
 }
