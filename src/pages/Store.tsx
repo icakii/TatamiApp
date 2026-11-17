@@ -3,18 +3,54 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MyReservationsCard } from '../components/app/MyReservationsCard'
 import { PageHeader } from '../components/app/ui'
-import { useClub } from '../hooks/useClub'
+import { clubAsset, useClub } from '../hooks/useClub'
 import { useMember, type Member } from '../hooks/useMember'
 import { useReserve } from '../hooks/useReservations'
 import { Reveal } from '../components/Section'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
 // Example catalogue: drawn product art instead of photos, prices in EUR.
+// The drawings wear the club's own logo, name and colour.
 // With the club's store option on, a logged-in student reserves an item
 // with the child's measurements and the coach sees it in the admin panel;
 // payment happens at the hall. Without it the page is just a catalogue.
 
-function TeeArt() {
+interface Brand {
+  logo: string | null
+  name: string
+}
+
+// The print on the merch: the club logo in a white disc, or its initials.
+function Badge({ brand, cx, cy, r, id }: { brand: Brand; cx: number; cy: number; r: number; id: string }) {
+  const initials = brand.name.split(/\s+/).map((w) => w[0]).filter((c) => /\p{L}/u.test(c ?? '')).slice(0, 2).join('')
+  return (
+    <>
+      <circle cx={cx} cy={cy} r={r} fill="#fbf6ea" />
+      {brand.logo ? (
+        <>
+          <clipPath id={id}>
+            <circle cx={cx} cy={cy} r={r - 2} />
+          </clipPath>
+          <image href={brand.logo} x={cx - r + 2} y={cy - r + 2} width={(r - 2) * 2} height={(r - 2) * 2} clipPath={`url(#${id})`} preserveAspectRatio="xMidYMid meet" />
+        </>
+      ) : (
+        <text x={cx} y={cy + r * 0.35} textAnchor="middle" fontSize={r} fill="#1f1b16" fontFamily="Oswald, sans-serif">
+          {initials}
+        </text>
+      )}
+    </>
+  )
+}
+
+function useBrand(): Brand {
+  const { data: club } = useClub()
+  return { logo: club?.logo_path ? clubAsset(club.id, club.logo_path) : null, name: club?.name ?? '' }
+}
+
+// "Спартак 14 – Плевен" -> "СПАРТАК"
+const shortName = (name: string) => (name.split(/[\s–-]+/)[0] ?? name).toUpperCase().slice(0, 12)
+
+function TeeArt({ brand }: { brand: Brand }) {
   return (
     <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden="true">
       <path
@@ -22,12 +58,9 @@ function TeeArt() {
         fill="#1f1b16"
       />
       <path d="M70 38 C76 52 88 58 100 58 C112 58 124 52 130 38" fill="none" stroke="#3a332a" strokeWidth="4" />
-      <circle cx="100" cy="106" r="22" fill="none" stroke="#fbf6ea" strokeWidth="3" />
-      <text x="100" y="116" textAnchor="middle" fontSize="26" fill="#fbf6ea" fontFamily="'Yuji Syuku', serif">
-        極
-      </text>
-      <text x="100" y="146" textAnchor="middle" fontSize="11" letterSpacing="5" fill="#c9973f" fontFamily="Oswald, sans-serif">
-        KIME
+      <Badge brand={brand} cx={100} cy={102} r={22} id="tee-logo" />
+      <text x="100" y="146" textAnchor="middle" fontSize="11" letterSpacing="4" fill="#fbf6ea" fontFamily="Oswald, sans-serif">
+        {shortName(brand.name)}
       </text>
     </svg>
   )
@@ -54,27 +87,18 @@ function GiArt() {
   )
 }
 
-function BagArt() {
+function BagArt({ brand }: { brand: Brand }) {
   return (
     <svg viewBox="0 0 200 200" className="h-full w-full" aria-hidden="true">
       {/* Drawstrings. */}
       <path d="M62 50 C40 90 44 150 56 176" fill="none" stroke="#1f1b16" strokeWidth="4" />
       <path d="M138 50 C160 90 156 150 144 176" fill="none" stroke="#1f1b16" strokeWidth="4" />
-      <path d="M56 40 L144 40 L150 176 L50 176 Z" fill="#c2361f" />
-      <path d="M56 40 L144 40 L145 54 L55 54 Z" fill="#a82c18" />
+      <path d="M56 40 L144 40 L150 176 L50 176 Z" style={{ fill: 'var(--color-aka)' }} />
+      <path d="M56 40 L144 40 L145 54 L55 54 Z" fill="#000" opacity="0.18" />
       <path d="M62 47 C90 60 110 60 138 47" fill="none" stroke="#1f1b16" strokeWidth="4" />
-      <rect x="70" y="88" width="60" height="60" rx="4" fill="#fbf6ea" transform="rotate(-6 100 118)" />
-      <text
-        x="100"
-        y="130"
-        textAnchor="middle"
-        fontSize="34"
-        fill="#c2361f"
-        fontFamily="'Yuji Syuku', serif"
-        transform="rotate(-6 100 118)"
-      >
-        道
-      </text>
+      <g transform="rotate(-6 100 118)">
+        <Badge brand={brand} cx={100} cy={116} r={30} id="bag-logo" />
+      </g>
     </svg>
   )
 }
@@ -92,11 +116,11 @@ function BeltArt() {
   )
 }
 
-const ITEMS: { key: string; price: number; art: ReactNode; bg: string; sizes?: string[]; badge?: 'new' | 'popular' }[] = [
-  { key: 'tee', price: 25, art: <TeeArt />, bg: 'from-kin/25 to-sakura/30', sizes: ['XS', 'S', 'M', 'L', 'XL'], badge: 'new' },
-  { key: 'gi', price: 59, art: <GiArt />, bg: 'from-ai/25 to-ai-soft/10', sizes: ['130', '140', '150', '160', '170', '180'], badge: 'popular' },
-  { key: 'bag', price: 18, art: <BagArt />, bg: 'from-jade/20 to-kin/15' },
-  { key: 'belt', price: 12, art: <BeltArt />, bg: 'from-aka/15 to-kin/20', sizes: ['220', '240', '260', '280'] },
+const ITEMS: { key: string; price: number; art: (brand: Brand) => ReactNode; bg: string; sizes?: string[]; badge?: 'new' | 'popular' }[] = [
+  { key: 'tee', price: 25, art: (b) => <TeeArt brand={b} />, bg: 'from-kin/25 to-sakura/30', sizes: ['XS', 'S', 'M', 'L', 'XL'], badge: 'new' },
+  { key: 'gi', price: 59, art: () => <GiArt />, bg: 'from-ai/25 to-ai-soft/10', sizes: ['130', '140', '150', '160', '170', '180'], badge: 'popular' },
+  { key: 'bag', price: 18, art: (b) => <BagArt brand={b} />, bg: 'from-jade/20 to-kin/15' },
+  { key: 'belt', price: 12, art: () => <BeltArt />, bg: 'from-aka/15 to-kin/20', sizes: ['220', '240', '260', '280'] },
 ]
 
 type Item = (typeof ITEMS)[number]
@@ -106,7 +130,9 @@ function ProductCard({
   index,
   reserved,
   onReserve,
+  brand,
 }: {
+  brand: Brand
   item: Item
   index: number
   reserved: boolean
@@ -138,7 +164,7 @@ function ProductCard({
             whileHover={reduced ? undefined : { rotate: -4, scale: 1.06 }}
             transition={{ type: 'spring', stiffness: 220, damping: 16 }}
           >
-            {item.art}
+            {item.art(brand)}
           </motion.div>
         </div>
         <div className="flex flex-1 flex-col p-5">
@@ -220,6 +246,7 @@ function ReserveSheet({
   onClose: () => void
 }) {
   const { t } = useTranslation()
+  const brand = useBrand()
   const { data: club } = useClub()
   const reserve = useReserve(club?.id, member.id)
   const [height, setHeight] = useState(member.height_cm ? String(member.height_cm) : '')
@@ -267,7 +294,7 @@ function ReserveSheet({
         className="w-full max-w-md rounded-t-3xl bg-shiro p-6 shadow-2xl sm:rounded-3xl"
       >
         <div className="flex items-center gap-4">
-          <div className={`h-20 w-20 shrink-0 rounded-2xl bg-linear-to-br p-2 ${item.bg}`}>{item.art}</div>
+          <div className={`h-20 w-20 shrink-0 rounded-2xl bg-linear-to-br p-2 ${item.bg}`}>{item.art(brand)}</div>
           <div className="min-w-0">
             <p className="font-display text-xl font-semibold uppercase tracking-wide text-ink">
               {t(`store.items.${item.key}.name`)}
@@ -323,6 +350,7 @@ export function Store() {
   const { data: member } = useMember(club?.id)
   const [pending, setPending] = useState<{ item: Item; size: string | undefined } | null>(null)
   const [reserved, setReserved] = useState<Set<string>>(new Set())
+  const brand = useBrand()
 
   function onReserve(item: Item, size: string | undefined) {
     // Without the option the page is just a catalogue example.
@@ -339,7 +367,7 @@ export function Store() {
       <p className="mt-2 text-sm text-muted">{t('store.body')}</p>
       <div className="mt-5 grid gap-4 lg:grid-cols-3 lg:gap-6">
         {ITEMS.map((item, i) => (
-          <ProductCard key={item.key} item={item} index={i} reserved={reserved.has(item.key)} onReserve={onReserve} />
+          <ProductCard key={item.key} brand={brand} item={item} index={i} reserved={reserved.has(item.key)} onReserve={onReserve} />
         ))}
       </div>
       {club?.store_enabled && member && (
