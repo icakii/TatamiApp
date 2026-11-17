@@ -7,7 +7,7 @@ import { useClub } from '../../hooks/useClub'
 import { useGroups } from '../../hooks/useGroups'
 import { beltLabel } from '../../lib/belts'
 import { egnBirthDate, isValidEgn } from '../../lib/egn'
-import { randomPin, usernamePreview } from '../../lib/login'
+import { birthdayPassword, randomPin, usernamePreview } from '../../lib/login'
 
 const fieldClass =
   'mt-1 min-h-11 w-full rounded-xl border border-ink/15 bg-kuro px-3 text-ink outline-none transition-colors focus:border-aka-text'
@@ -27,7 +27,7 @@ const int = (v: string) => (v.trim() ? Math.round(Number(v)) : null)
 
 // Add a student, or edit one. The app login is made at the same time with
 // nothing to type: the username is the first name plus the club
-// ("maria.spartak") and the password the first 6 digits of the ЕГН. A brother
+// ("maria.spartak") and the password the birth date from the ЕГН. A brother
 // or sister can share an existing login instead (one login per family).
 export function StudentFormModal({
   clubId,
@@ -69,7 +69,8 @@ export function StudentFormModal({
   const [siblingId, setSiblingId] = useState('')
   const [pin] = useState(randomPin)
   const withEgn = f.egn.length === 10 && isValidEgn(f.egn)
-  const password = withEgn ? f.egn.slice(0, 6) : pin
+  const born = withEgn ? egnBirthDate(f.egn) : null
+  const password = born ? birthdayPassword(born) : pin
   const siblings = (allMembers ?? []).filter((m) => m.role === 'student' && m.user_id && m.id !== member?.id)
 
   useEffect(() => {

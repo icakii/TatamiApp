@@ -553,8 +553,8 @@
       "loginNew": "New login",
       "loginSibling": "Brother / sister",
       "loginUser": "Username",
-      "passFromEgn": "The password is the first 6 digits of the ЕГН. The parent can change it in Profile.",
-      "passRandom": "Fill in the ЕГН and the password becomes its first 6 digits. Without it, it is this random one.",
+      "passFromEgn": "The password is the child's birth date from the ЕГН (DDMMYYYY). The parent can change it in Profile.",
+      "passRandom": "Fill in the ЕГН and the password becomes the birth date (DDMMYYYY). Without it, it is this random one.",
       "siblingPick": "Brother or sister with a login",
       "siblingHint": "Both children share one login. The parent switches between them with one tap."
     },

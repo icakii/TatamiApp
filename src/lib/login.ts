@@ -26,7 +26,14 @@ export function toLoginEmail(input: string, slug: string | undefined): string {
   return `${v.includes('.') || !slug ? v : `${v}.${slug}`}@${LOGIN_DOMAIN}`
 }
 
+// The first password: the child's birthday as ДДММГГГГ, which parents know
+// by heart (the project requires 8+ characters). They can change it in Profile.
+export function birthdayPassword(born: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${pad(born.getDate())}${pad(born.getMonth() + 1)}${born.getFullYear()}`
+}
+
 export function randomPin(): string {
-  const n = crypto.getRandomValues(new Uint32Array(1))[0] % 1_000_000
-  return String(n).padStart(6, '0')
+  const n = crypto.getRandomValues(new Uint32Array(1))[0] % 100_000_000
+  return String(n).padStart(8, '0')
 }
