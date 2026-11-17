@@ -10,6 +10,7 @@ export interface AdminMember {
   phone: string | null
   egn: string | null
   user_id: string | null
+  login_name: string | null
   role: 'owner' | 'coach' | 'student'
   status: 'active' | 'trial' | 'paused' | 'left'
   group_id: string | null
@@ -36,7 +37,7 @@ export function useAdminMembers(clubId: string | undefined) {
       const { data, error } = await supabase
         .from('members')
         .select(
-          'id, full_name, email, phone, egn, user_id, role, status, group_id, monthly_fee_cents, birth_year, height_cm, weight_kg, guardian_first_name, guardian_last_name, guardian_phone, guardian_email, photo_path, last_reminder_at, joined_at, belt:belts(id, rank, name_bg, name_en, color_hex, color2_hex, grade_bg, grade_en)',
+          'id, full_name, email, phone, egn, user_id, login_name, role, status, group_id, monthly_fee_cents, birth_year, height_cm, weight_kg, guardian_first_name, guardian_last_name, guardian_phone, guardian_email, photo_path, last_reminder_at, joined_at, belt:belts(id, rank, name_bg, name_en, color_hex, color2_hex, grade_bg, grade_en)',
         )
         .eq('club_id', clubId as string)
         .order('full_name')
@@ -92,9 +93,13 @@ export function useSaveStudent(clubId: string | undefined) {
 export function useCreateLogin(clubId: string | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async ({ memberId, email, password }: { memberId: string; email: string; password: string }) => {
+    // A new login gets a username ("maria.spartak") made by the server; a
+    // sibling shares the login of a brother or sister already in the club.
+    mutationFn: async ({ memberId, password, siblingId }: { memberId: string; password?: string; siblingId?: string }) => {
       const { data, error } = await supabase.functions.invoke('create-member-account', {
-        body: { club_id: clubId, member_id: memberId, email, password },
+        body: siblingId
+          ? { club_id: clubId, member_id: memberId, sibling_member_id: siblingId }
+          : { club_id: clubId, member_id: memberId, login: 'auto', password },
       })
       if (error) {
         // The function's own message (e.g. "email in use") is in the response body.
@@ -102,7 +107,7 @@ export function useCreateLogin(clubId: string | undefined) {
         const msg = ctx ? ((await ctx.json().catch(() => null)) as { error?: string } | null)?.error : null
         throw new Error(msg ?? error.message)
       }
-      return data as { linked_existing: boolean }
+      return data as { linked_existing: boolean; login: string }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-members', clubId] }),
   })

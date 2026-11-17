@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MemberAvatar } from '../../components/admin/MemberAvatar'
@@ -34,11 +34,19 @@ export function Attendance() {
 
   const [date, setDate] = useState(() => toISODate(new Date()))
   const [classId, setClassId] = useState<string>('')
-  // Filter the day's classes and the 30-day summary by group and by hall.
+  // Pick the hall first, then one of the groups that train there (coaches
+  // found both rows of chips at once too busy).
   const [groupFilter, setGroupFilter] = useState<string>('')
   const [hallFilter, setHallFilter] = useState<string>('')
   const { data: groups } = useGroups(club?.id)
   const halls = useMemo(() => [...new Set((classes ?? []).map((c) => c.room).filter((r): r is string => !!r))], [classes])
+  const groupsHere = useMemo(() => {
+    if (!hallFilter) return halls.length > 0 ? [] : (groups ?? [])
+    const ids = new Set((classes ?? []).filter((c) => c.room === hallFilter).map((c) => c.group_id))
+    return (groups ?? []).filter((g) => ids.has(g.id))
+  }, [classes, groups, halls, hallFilter])
+  const chip = (active: boolean, tone: string) =>
+    `rounded-full px-4 py-2 font-display uppercase tracking-wide transition-colors ${active ? tone : 'border border-ink/15 bg-shiro/95 text-muted hover:text-ink'}`
 
   const weekday = mondayIndex(new Date(`${date}T00:00:00`))
   const classesThisDay = useMemo(
@@ -143,38 +151,43 @@ export function Attendance() {
         )}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-        <span className="font-display uppercase tracking-[0.2em] text-muted">{t('admin.attendance.filterGroup')}</span>
-        {[{ id: '', name: t('admin.attendance.all') }, ...(groups ?? [])].map((g) => (
-          <button
-            key={g.id || 'all'}
-            type="button"
-            onClick={() => setGroupFilter(g.id)}
-            className={`rounded-full px-3 py-1.5 font-display uppercase tracking-wide transition-colors ${
-              groupFilter === g.id ? 'bg-ink text-shiro' : 'border border-ink/15 text-muted hover:text-ink'
-            }`}
+      {halls.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+          <span className="font-display uppercase tracking-[0.2em] text-muted">{t('admin.attendance.filterHall')}</span>
+          {['', ...halls].map((h) => (
+            <button
+              key={h || 'all-halls'}
+              type="button"
+              onClick={() => {
+                setHallFilter(h)
+                setGroupFilter('')
+              }}
+              className={chip(hallFilter === h, 'bg-kin text-ink')}
+            >
+              {h || t('admin.attendance.allHalls')}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <AnimatePresence initial={false}>
+        {groupsHere.length > 0 && (
+          <motion.div
+            key={hallFilter || 'groups'}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            className={`mt-3 flex flex-wrap items-center gap-2 text-xs ${halls.length > 0 ? 'ml-3 border-l-2 border-kin/60 pl-3' : ''}`}
           >
-            {g.name}
-          </button>
-        ))}
-        {halls.length > 0 && (
-          <>
-            <span className="ml-2 font-display uppercase tracking-[0.2em] text-muted">{t('admin.attendance.filterHall')}</span>
-            {['', ...halls].map((h) => (
-              <button
-                key={h || 'all-halls'}
-                type="button"
-                onClick={() => setHallFilter(h)}
-                className={`rounded-full px-3 py-1.5 font-display uppercase tracking-wide transition-colors ${
-                  hallFilter === h ? 'bg-kin text-ink' : 'border border-ink/15 text-muted hover:text-ink'
-                }`}
-              >
-                {h || t('admin.attendance.all')}
+            <span className="font-display uppercase tracking-[0.2em] text-muted">{t('admin.attendance.filterGroup')}</span>
+            {[{ id: '', name: t('admin.attendance.all') }, ...groupsHere].map((g) => (
+              <button key={g.id || 'all'} type="button" onClick={() => setGroupFilter(g.id)} className={chip(groupFilter === g.id, 'bg-ink text-shiro')}>
+                {g.name}
               </button>
             ))}
-          </>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
 
       {classesThisDay.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">

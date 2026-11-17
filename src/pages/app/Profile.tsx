@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { PageHeader, Stagger, StaggerItem } from '../../components/app/ui'
 import { BeltChip } from '../../components/BeltChip'
 import { MemberAvatar } from '../../components/admin/MemberAvatar'
+import { ChangePasswordCard } from '../../components/app/ChangePasswordCard'
 import { ClubSwitcher } from '../../components/app/ClubSwitcher'
 import { MyGradesCard } from '../../components/app/MyGradesCard'
 import { MyReservationsCard } from '../../components/app/MyReservationsCard'
@@ -114,6 +115,10 @@ export function Profile() {
 
         <StaggerItem>
           <ClubSwitcher />
+        </StaggerItem>
+
+        <StaggerItem>
+          <ChangePasswordCard />
         </StaggerItem>
 
         <StaggerItem>

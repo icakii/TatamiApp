@@ -248,15 +248,15 @@
   "auth": {
     "navLink": "Log in",
     "title": "Log in",
-    "email": "Email",
+    "email": "Username or email",
     "password": "Password",
     "submit": "Log in",
     "submitting": "Signing in...",
-    "error": "Wrong email or password.",
+    "error": "Wrong username or password.",
     "noAccount": "Don't have an account?",
     "noAccountLink": "Contact your coach",
     "modalTitle": "How to get access",
-    "modalBody": "Access is only ever created by your coach. Tell them your email in person or by message and they'll set up an account with a password for you. Nobody can register on this site themselves, to keep students' accounts safe.",
+    "modalBody": "Access is only ever created by your coach. They will give you a username and password. Nobody can register themselves, to keep students' accounts safe.",
     "modalClose": "Got it",
     "forgotLink": "Forgot password?",
     "forgotTitle": "Forgot password",
@@ -335,7 +335,12 @@
     "title": "Profile",
     "belt": "Belt",
     "viewSite": "View public site",
-    "logout": "Log out"
+    "logout": "Log out",
+    "changePassword": "Change password",
+    "newPassword": "New password (8+ characters)",
+    "savePassword": "Save",
+    "passwordSaved": "Password changed.",
+    "passwordError": "That did not work. Try a longer password."
   },
   "admin": {
     "title": "Admin panel",
@@ -366,7 +371,8 @@
       "attendance": "Attendance",
       "payments": "Fee payments",
       "reservations": "Reservations",
-      "qr": "QR check-in"
+      "qr": "QR check-in",
+      "messages": "Messages"
     },
     "payments": {
       "title": "Payments",
@@ -427,7 +433,8 @@
       "noHistory": "No sessions marked in the last 30 days yet.",
       "filterGroup": "Group",
       "filterHall": "Hall",
-      "all": "All"
+      "all": "All",
+      "allHalls": "All halls"
     },
     "subscription": {
       "title": "Subscription",
@@ -534,18 +541,40 @@
       "status": "Status",
       "firstName": "First name",
       "lastName": "Last name",
-      "makeLogin": "Create an app login",
-      "loginEmail": "Login email (the parent's for young children)",
+      "makeLogin": "App login",
       "password": "Password",
-      "newPassword": "New password",
-      "loginHint": "If the parent already has a login in the club (with another child), the new child is added to that login and the password stays the same.",
-      "loginMade": "Login created.\nEmail: {{email}}\nPassword: {{password}}\n\nGive these to the student or parent. They can change the password via \"Forgot password\".",
-      "linked": "The child was added to {{email}}'s login. The parent can switch between children in the app.",
+      "loginMade": "The login is ready.\nUsername: {{login}}\nPassword: {{password}}\n\nThey log in at app.tatamistudio.net/{{slug}}. The password can be changed in Profile.",
+      "linked": "The child was added to the login {{login}}. The parent switches between children with one tap.",
       "save": "Save",
       "none": "No students match these filters.",
       "appLogin": "App login",
       "hasLogin": "Yes",
-      "noLogin": "None (add it via \"Edit\")"
+      "noLogin": "None (add it via \"Edit\")",
+      "loginNew": "New login",
+      "loginSibling": "Brother / sister",
+      "loginUser": "Username",
+      "passFromEgn": "The password is the first 6 digits of the ЕГН. The parent can change it in Profile.",
+      "passRandom": "Fill in the ЕГН and the password becomes its first 6 digits. Without it, it is this random one.",
+      "siblingPick": "Brother or sister with a login",
+      "siblingHint": "Both children share one login. The parent switches between them with one tap."
+    },
+    "messages": {
+      "title": "Messages",
+      "body": "The message shows up in the students' app, under \"Messages\" on the home screen.",
+      "to": "To",
+      "everyone": "All students",
+      "subject": "Title",
+      "subjectPlaceholder": "Belt exam in December",
+      "text": "Text",
+      "send": "Send",
+      "sent_one": "Sent to {{count}} student.",
+      "sent_other": "Sent to {{count}} students.",
+      "history": "Sent",
+      "none": "No messages sent yet.",
+      "delete": "Delete",
+      "confirmDelete": "Delete this message from everyone's app?",
+      "recipients_one": "{{count}} recipient",
+      "recipients_other": "{{count}} recipients"
     }
   },
   "offline": {

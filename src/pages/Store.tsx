@@ -337,13 +337,13 @@ export function Store() {
     <div className="px-5 pb-6 pt-5">
       <PageHeader kanji="店" title={t('store.title')} tone="bg-aka" />
       <p className="mt-2 text-sm text-muted">{t('store.body')}</p>
-      <div className="mt-5 grid gap-4">
+      <div className="mt-5 grid gap-4 lg:grid-cols-3 lg:gap-6">
         {ITEMS.map((item, i) => (
           <ProductCard key={item.key} item={item} index={i} reserved={reserved.has(item.key)} onReserve={onReserve} />
         ))}
       </div>
       {club?.store_enabled && member && (
-        <div className="mt-6">
+        <div className="mt-6 lg:max-w-md">
           <MyReservationsCard memberId={member.id} />
         </div>
       )}

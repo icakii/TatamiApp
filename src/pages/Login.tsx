@@ -8,6 +8,7 @@ import { useClub, useClubSlug } from '../hooks/useClub'
 import { LegalLinks } from '../components/LegalLinks'
 import { Modal } from '../components/Modal'
 import { useAuth } from '../hooks/useAuth'
+import { toLoginEmail } from '../lib/login'
 
 export function Login() {
   const { t } = useTranslation()
@@ -34,7 +35,7 @@ export function Login() {
     e.preventDefault()
     setSubmitting(true)
     setError(null)
-    const { error } = await signIn(email, password)
+    const { error } = await signIn(toLoginEmail(email, slug ?? undefined), password)
     setSubmitting(false)
     if (error) {
       setError(t('auth.error'))
@@ -73,9 +74,13 @@ export function Login() {
             </label>
             <input
               id="email"
-              type="email"
+              type="text"
               required
-              autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              autoComplete="username"
+              placeholder={slug ? `maria.${slug}` : undefined}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 min-h-11 w-full rounded-md border border-line bg-kuro px-3 text-ink outline-none transition-colors focus:border-aka-text focus:bg-shiro"

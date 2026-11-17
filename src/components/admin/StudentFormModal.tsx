@@ -1,11 +1,13 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCreateLogin, useSaveStudent, type AdminMember, type StudentFields } from '../../hooks/useAdminMembers'
+import { useAdminMembers, useCreateLogin, useSaveStudent, type AdminMember, type StudentFields } from '../../hooks/useAdminMembers'
 import { useBelts } from '../../hooks/useBelts'
+import { useClub } from '../../hooks/useClub'
 import { useGroups } from '../../hooks/useGroups'
 import { beltLabel } from '../../lib/belts'
 import { egnBirthDate, isValidEgn } from '../../lib/egn'
+import { randomPin, usernamePreview } from '../../lib/login'
 
 const fieldClass =
   'mt-1 min-h-11 w-full rounded-xl border border-ink/15 bg-kuro px-3 text-ink outline-none transition-colors focus:border-aka-text'
@@ -23,14 +25,10 @@ function Field({ label, children, wide }: { label: string; children: ReactNode; 
 const text = (v: string) => v.trim() || null
 const int = (v: string) => (v.trim() ? Math.round(Number(v)) : null)
 
-function randomPassword() {
-  const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'
-  const bytes = crypto.getRandomValues(new Uint8Array(10))
-  return Array.from(bytes, (b) => chars[b % chars.length]).join('')
-}
-
-// Add a student, or edit one. On add the coach can also create the app
-// login straight away (for small children it's the parent's login).
+// Add a student, or edit one. The app login is made at the same time with
+// nothing to type: the username is the first name plus the club
+// ("maria.spartak") and the password the first 6 digits of the ЕГН. A brother
+// or sister can share an existing login instead (one login per family).
 export function StudentFormModal({
   clubId,
   member,
@@ -43,6 +41,8 @@ export function StudentFormModal({
   const { t, i18n } = useTranslation()
   const { data: belts } = useBelts(clubId)
   const { data: groups } = useGroups(clubId)
+  const { data: club } = useClub()
+  const { data: allMembers } = useAdminMembers(clubId)
   const save = useSaveStudent(clubId)
   const createLogin = useCreateLogin(clubId)
   const [error, setError] = useState<string | null>(null)
@@ -65,8 +65,12 @@ export function StudentFormModal({
     guardian_email: member?.guardian_email ?? '',
   })
   const canAddLogin = !member?.user_id
-  const [withLogin, setWithLogin] = useState(false)
-  const [login, setLogin] = useState({ email: '', password: randomPassword() })
+  const [withLogin, setWithLogin] = useState(!member)
+  const [siblingId, setSiblingId] = useState('')
+  const [pin] = useState(randomPin)
+  const withEgn = f.egn.length === 10 && isValidEgn(f.egn)
+  const password = withEgn ? f.egn.slice(0, 6) : pin
+  const siblings = (allMembers ?? []).filter((m) => m.role === 'student' && m.user_id && m.id !== member?.id)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -108,11 +112,11 @@ export function StudentFormModal({
     try {
       const id = await save.mutateAsync({ id: member?.id, fields })
       if (withLogin) {
-        const res = await createLogin.mutateAsync({ memberId: id, email: login.email.trim(), password: login.password })
+        const res = await createLogin.mutateAsync(siblingId ? { memberId: id, siblingId } : { memberId: id, password })
         setDone(
           res.linked_existing
-            ? t('admin.student.linked', { email: login.email.trim() })
-            : t('admin.student.loginMade', { email: login.email.trim(), password: login.password }),
+            ? t('admin.student.linked', { login: res.login })
+            : t('admin.student.loginMade', { login: res.login, password, slug: club?.slug }),
         )
         return
       }
@@ -242,28 +246,62 @@ export function StudentFormModal({
                   <input
                     type="checkbox"
                     checked={withLogin}
-                    onChange={(e) => {
-                      setWithLogin(e.target.checked)
-                      if (e.target.checked && !login.email) setLogin((l) => ({ ...l, email: f.guardian_email || f.email }))
-                    }}
+                    onChange={(e) => setWithLogin(e.target.checked)}
                     className="h-5 w-5 accent-[var(--color-aka)]"
                   />
                   <span className="font-display text-sm uppercase tracking-wide text-ink">{t('admin.student.makeLogin')}</span>
                 </label>
                 {withLogin && (
-                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                    <Field label={t('admin.student.loginEmail')}>
-                      <input required type="email" value={login.email} onChange={(e) => setLogin((l) => ({ ...l, email: e.target.value }))} className={fieldClass} />
-                    </Field>
-                    <Field label={t('admin.student.password')}>
-                      <span className="mt-1 flex gap-2">
-                        <input required minLength={8} value={login.password} onChange={(e) => setLogin((l) => ({ ...l, password: e.target.value }))} className={`${fieldClass} mt-0 font-mono`} />
-                        <button type="button" onClick={() => setLogin((l) => ({ ...l, password: randomPassword() }))} className="shrink-0 rounded-xl border border-ink/15 px-3 text-xs text-muted" aria-label={t('admin.student.newPassword')}>
-                          ↻
-                        </button>
-                      </span>
-                    </Field>
-                    <p className="text-xs text-muted sm:col-span-2">{t('admin.student.loginHint')}</p>
+                  <div className="mt-3 space-y-3">
+                    {siblings.length > 0 && (
+                      <div className="grid grid-cols-2 gap-2" role="radiogroup">
+                        {[false, true].map((sib) => {
+                          const active = sib === !!siblingId
+                          return (
+                            <button
+                              key={String(sib)}
+                              type="button"
+                              role="radio"
+                              aria-checked={active}
+                              onClick={() => setSiblingId(sib ? siblings[0].id : '')}
+                              className={`min-h-11 rounded-xl px-3 font-display text-xs uppercase tracking-wide transition-colors ${
+                                active ? 'bg-ink text-shiro' : 'border border-ink/15 text-muted hover:text-ink'
+                              }`}
+                            >
+                              {t(sib ? 'admin.student.loginSibling' : 'admin.student.loginNew')}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
+                    {siblingId ? (
+                      <>
+                        <Field label={t('admin.student.siblingPick')}>
+                          <select value={siblingId} onChange={(e) => setSiblingId(e.target.value)} className={fieldClass}>
+                            {siblings.map((m) => (
+                              <option key={m.id} value={m.id}>
+                                {m.full_name}
+                              </option>
+                            ))}
+                          </select>
+                        </Field>
+                        <p className="text-xs text-muted">{t('admin.student.siblingHint')}</p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="grid grid-cols-2 gap-3 rounded-xl bg-shiro px-4 py-3">
+                          <div className="min-w-0">
+                            <p className={labelClass}>{t('admin.student.loginUser')}</p>
+                            <p className="truncate font-mono text-base text-ink">{usernamePreview(f.full_name, club?.slug)}</p>
+                          </div>
+                          <div>
+                            <p className={labelClass}>{t('admin.student.password')}</p>
+                            <p className="font-mono text-base tracking-wider text-ink">{password}</p>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted">{t(withEgn ? 'admin.student.passFromEgn' : 'admin.student.passRandom')}</p>
+                      </>
+                    )}
                   </div>
                 )}
               </fieldset>

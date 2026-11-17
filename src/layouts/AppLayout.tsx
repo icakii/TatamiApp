@@ -23,6 +23,8 @@ export function AppLayout() {
   const outlet = useOutlet()
   const path = useClubPath()
   const { data: club } = useClub()
+  // The store is a catalogue: on a computer the products sit side by side.
+  const wide = location.pathname.endsWith('/store') ? 'lg:max-w-5xl' : ''
 
   return (
     <div className="relative flex min-h-screen flex-col pb-28">
@@ -31,7 +33,7 @@ export function AppLayout() {
       <OfflineBanner />
 
       <header className="sticky top-0 z-20 border-b border-line/60 bg-kuro/95">
-        <div className="mx-auto flex h-14 w-full max-w-md items-center gap-2 px-6">
+        <div className={`mx-auto flex h-14 w-full max-w-md items-center gap-2 px-6 ${wide}`}>
           <ClubLogo club={club} className="h-8 w-8 text-xs" />
           <span className="truncate font-display text-base font-semibold uppercase tracking-[0.2em] text-ink">
             {club?.name}
@@ -41,7 +43,7 @@ export function AppLayout() {
       <ChildSwitcher />
 
       {/* Capped width: this is a phone app, not a desktop dashboard. */}
-      <main className="mx-auto w-full max-w-md flex-1">
+      <main className={`mx-auto w-full max-w-md flex-1 ${wide}`}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={location.pathname}

@@ -10,10 +10,11 @@ export function beltGrade(belt: BeltLike, lang: string | undefined): string | nu
   return (lang === 'en' ? belt.grade_en : belt.grade_bg) ?? null
 }
 
-// "Кафяво · 3 кю", or just the color for clubs without grades.
+// "1 дан · Черен" (said as "1-ви дан черен колан"), or just the color for
+// clubs without grades.
 export function beltLabel(belt: BeltLike, lang: string | undefined): string {
   const grade = beltGrade(belt, lang)
-  return grade ? `${beltColorName(belt, lang)} · ${grade}` : beltColorName(belt, lang)
+  return grade ? `${grade} · ${beltColorName(belt, lang)}` : beltColorName(belt, lang)
 }
 
 // Consecutive grades sharing a color collapse into one group (5-4 kyu blue,

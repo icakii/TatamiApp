@@ -133,7 +133,7 @@ export function MemberDetailModal({
           </div>
           <div className="min-w-0">
             <p className={labelClass}>{t('admin.student.appLogin')}</p>
-            <p className="text-ink">{member.user_id ? t('admin.student.hasLogin') : t('admin.student.noLogin')}</p>
+            <p className="truncate font-mono text-ink">{member.user_id ? (member.login_name ?? t('admin.student.hasLogin')) : t('admin.student.noLogin')}</p>
           </div>
         </div>
         {onEdit && member.role === 'student' && (
