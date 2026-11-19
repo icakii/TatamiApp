@@ -1,11 +1,12 @@
-import { animate, motion, useMotionValue, useTransform } from 'framer-motion'
-import { useEffect, useState, type FormEvent } from 'react'
+import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Card, Eyebrow, PageHeader, Stagger, StaggerItem } from '../../components/app/ui'
-import { useClub } from '../../hooks/useClub'
-import { useCompetitions, useDeleteCompetition, useMyCompetitionEntries, useSaveCompetition } from '../../hooks/useCompetitions'
+import { useClub, useClubPath } from '../../hooks/useClub'
+import { useCompetitions, useMyCompetitionEntries, useRemoveEntry, useSignUp, type Competition, type MyCompetitionEntry } from '../../hooks/useCompetitions'
 import { useMember, useStaffMember } from '../../hooks/useMember'
-import { localISODate } from '../../lib/date'
+import { localISODate, shortMonth } from '../../lib/date'
 
 const MEDAL_EMOJI: Record<string, string> = { gold: '🥇', silver: '🥈', bronze: '🥉' }
 const MEDAL_CARD: Record<string, string> = {
@@ -32,15 +33,13 @@ export function Competitions() {
   const { data: competitions } = useCompetitions(club?.id)
   const { data: myEntries } = useMyCompetitionEntries(club?.id, member?.id)
   const { data: staff } = useStaffMember(club?.id)
-  const remove = useDeleteCompetition(club?.id)
+  const path = useClubPath()
 
   const todayISO = localISODate()
   const upcoming = (competitions ?? [])
     .filter((c) => c.event_date >= todayISO)
     .sort((a, b) => (a.event_date < b.event_date ? -1 : 1))
-  const myUpcomingIds = new Set(
-    (myEntries ?? []).filter((e) => e.competition.event_date >= todayISO).map((e) => e.competition_id),
-  )
+  const myEntryFor = (id: string) => (myEntries ?? []).find((e) => e.competition_id === id)
   const pastResults = (myEntries ?? [])
     .filter((e) => e.competition.event_date < todayISO)
     .sort((a, b) => (a.competition.event_date < b.competition.event_date ? 1 : -1))
@@ -54,7 +53,7 @@ export function Competitions() {
     const d = new Date(`${iso}T00:00:00`)
     return {
       day: d.getDate(),
-      month: d.toLocaleDateString(i18n.resolvedLanguage, { month: 'short' }),
+      month: shortMonth(iso, i18n.resolvedLanguage),
       full: d.toLocaleDateString(i18n.resolvedLanguage, { day: 'numeric', month: 'long', year: 'numeric' }),
     }
   }
@@ -94,7 +93,12 @@ export function Competitions() {
         </StaggerItem>
         {staff && (
           <StaggerItem>
-            <AddCompetition clubId={club?.id} />
+            <Link
+              to={path('/admin/competitions')}
+              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-aka/40 font-display text-xs uppercase tracking-wide text-aka-text transition-colors hover:bg-aka/5"
+            >
+              {t('competitions.manage')} →
+            </Link>
           </StaggerItem>
         )}
         {upcoming.length === 0 ? (
@@ -104,37 +108,11 @@ export function Competitions() {
             </Card>
           </StaggerItem>
         ) : (
-          upcoming.map((c) => {
-            const d = dateParts(c.event_date)
-            const entered = myUpcomingIds.has(c.id)
-            return (
-              <StaggerItem key={c.id}>
-                <Card className={`flex items-center gap-4 ${entered ? 'border-aka/40' : ''}`}>
-                  <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-ai text-shiro">
-                    <span className="font-display text-xl font-bold leading-none">{d.day}</span>
-                    <span className="text-[9px] uppercase tracking-wider text-shiro/70">{d.month}</span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-display font-semibold uppercase tracking-wide text-ink">
-                      {c.name}
-                    </p>
-                    {c.location && <p className="truncate text-xs text-muted">{c.location}</p>}
-                  </div>
-                  {entered && <span className="text-lg">🏆</span>}
-                  {staff && (
-                    <button
-                      type="button"
-                      onClick={() => remove.mutate(c.id)}
-                      className="shrink-0 rounded-full px-2 py-1 text-xs text-muted hover:text-aka-text"
-                      aria-label={t('competitions.delete')}
-                    >
-                      ✕
-                    </button>
-                  )}
-                </Card>
-              </StaggerItem>
-            )
-          })
+          upcoming.map((c) => (
+            <StaggerItem key={c.id}>
+              <UpcomingCard c={c} entry={myEntryFor(c.id)} memberId={member?.id} clubId={club?.id} date={dateParts(c.event_date)} />
+            </StaggerItem>
+          ))
         )}
 
         <StaggerItem>
@@ -182,57 +160,94 @@ export function Competitions() {
   )
 }
 
-// Coaches put the next tournament in themselves; it shows to every student.
-function AddCompetition({ clubId }: { clubId: string | undefined }) {
+// An upcoming competition: when, where, the coach's notes and, while the
+// coach has sign-ups open, a one-tap sign-up in one discipline.
+function UpcomingCard({
+  c,
+  entry,
+  memberId,
+  clubId,
+  date,
+}: {
+  c: Competition
+  entry: MyCompetitionEntry | undefined
+  memberId: string | undefined
+  clubId: string | undefined
+  date: { day: number; month: string; full: string }
+}) {
   const { t } = useTranslation()
-  const save = useSaveCompetition(clubId)
-  const [open, setOpen] = useState(false)
-  const [form, setForm] = useState({ name: '', event_date: '', location: '' })
-  const field = 'mt-1 min-h-11 w-full rounded-xl border border-ink/15 bg-kuro px-3 text-ink outline-none focus:border-aka-text'
+  const signUp = useSignUp(clubId, memberId)
+  const withdraw = useRemoveEntry(clubId)
+  const [picking, setPicking] = useState(false)
 
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault()
-    await save.mutateAsync({ name: form.name.trim(), event_date: form.event_date, location: form.location.trim() || null, notes: null })
-    setForm({ name: '', event_date: '', location: '' })
-    setOpen(false)
-  }
-
-  if (!open) {
-    return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-aka/40 font-display text-xs uppercase tracking-wide text-aka-text transition-colors hover:bg-aka/5"
-      >
-        + {t('competitions.add')}
-      </button>
-    )
-  }
   return (
-    <form onSubmit={onSubmit} className="space-y-3 rounded-2xl border border-ink/10 bg-shiro/95 p-4">
-      <label className="block">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{t('competitions.name')}</span>
-        <input required maxLength={120} value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} className={field} />
-      </label>
-      <div className="grid grid-cols-2 gap-3">
-        <label className="block">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{t('competitions.date')}</span>
-          <input required type="date" min={localISODate()} value={form.event_date} onChange={(e) => setForm((f) => ({ ...f, event_date: e.target.value }))} className={field} />
-        </label>
-        <label className="block">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{t('competitions.place')}</span>
-          <input maxLength={120} value={form.location} onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))} className={field} />
-        </label>
+    <Card className={entry ? 'border-aka/40' : ''}>
+      <div className="flex items-center gap-4">
+        <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-ai text-shiro">
+          <span className="font-display text-xl font-bold leading-none">{date.day}</span>
+          <span className="text-[9px] uppercase tracking-wider text-shiro/70">{date.month}</span>
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-display font-semibold uppercase tracking-wide text-ink">{c.name}</p>
+          <p className="text-xs text-muted">
+            {c.start_time ? `${c.start_time.slice(0, 5)} · ` : ''}
+            {c.location}
+          </p>
+        </div>
+        {entry && <span className="text-lg">🏆</span>}
       </div>
-      {save.error && <p className="text-sm text-aka-text">{t('competitions.error')}</p>}
-      <div className="grid grid-cols-2 gap-3">
-        <button type="button" onClick={() => setOpen(false)} className="min-h-11 rounded-xl border border-ink/15 font-display text-xs uppercase tracking-wide text-muted">
-          {t('admin.edit.cancel')}
-        </button>
-        <button type="submit" disabled={save.isPending} className="min-h-11 rounded-xl bg-aka font-display text-xs uppercase tracking-wide text-shiro disabled:opacity-60">
-          {save.isPending ? '...' : t('competitions.save')}
-        </button>
-      </div>
-    </form>
+      {c.notes && <p className="mt-3 whitespace-pre-line text-sm text-muted">{c.notes}</p>}
+
+      {entry ? (
+        <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-aka/10 px-3 py-2">
+          <p className="text-sm text-ink">
+            {t('competitions.signedUp')} <b>{entry.category}</b>
+          </p>
+          {c.registration_open && !entry.placement && (
+            <button type="button" onClick={() => withdraw.mutate(entry.id)} disabled={withdraw.isPending} className="shrink-0 text-xs text-muted underline hover:text-aka-text">
+              {t('competitions.withdraw')}
+            </button>
+          )}
+        </div>
+      ) : (
+        c.registration_open &&
+        memberId && (
+          <>
+            {!picking ? (
+              <button
+                type="button"
+                onClick={() => setPicking(true)}
+                className="mt-3 min-h-11 w-full rounded-xl bg-aka font-display text-sm uppercase tracking-wide text-shiro shadow-[0_12px_24px_-12px_color-mix(in_srgb,var(--color-aka)_90%,transparent)]"
+              >
+                {t('competitions.signUp')}
+              </button>
+            ) : (
+              <AnimatePresence>
+                <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className="mt-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{t('competitions.pickDiscipline')}</p>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    {c.disciplines.map((d) => (
+                      <button
+                        key={d}
+                        type="button"
+                        disabled={signUp.isPending}
+                        onClick={() => signUp.mutate({ competitionId: c.id, discipline: d }, { onSuccess: () => setPicking(false) })}
+                        className="min-h-11 rounded-xl border border-ink/15 px-2 font-display text-xs uppercase tracking-wide text-ink transition-colors hover:border-aka-text hover:text-aka-text disabled:opacity-50"
+                      >
+                        {d}
+                      </button>
+                    ))}
+                  </div>
+                  {signUp.error && <p className="mt-2 text-xs text-aka-text">{t('competitions.error')}</p>}
+                  <button type="button" onClick={() => setPicking(false)} className="mt-2 w-full text-center text-xs text-muted">
+                    {t('admin.edit.cancel')}
+                  </button>
+                </motion.div>
+              </AnimatePresence>
+            )}
+          </>
+        )
+      )}
+    </Card>
   )
 }

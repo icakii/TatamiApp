@@ -16,6 +16,7 @@ import { Attendance } from './pages/admin/Attendance'
 import { HallQr } from './pages/admin/HallQr'
 import { Members } from './pages/admin/Members'
 import { Messages } from './pages/admin/Messages'
+import { AdminCompetitions } from './pages/admin/AdminCompetitions'
 import { Payments as AdminPayments } from './pages/admin/Payments'
 import { Reservations } from './pages/admin/Reservations'
 import { Competitions } from './pages/app/Competitions'
@@ -68,6 +69,7 @@ function App() {
           <Route path="attendance" element={<Attendance />} />
           <Route path="payments" element={<AdminPayments />} />
           <Route path="messages" element={<Messages />} />
+          <Route path="competitions" element={<AdminCompetitions />} />
           <Route path="reservations" element={<Reservations />} />
           <Route path="qr" element={<HallQr />} />
         </Route>

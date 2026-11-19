@@ -262,7 +262,12 @@
     "place": "Place",
     "save": "Add",
     "error": "That didn't work. Try again.",
-    "delete": "Remove competition"
+    "delete": "Remove competition",
+    "manage": "Manage competitions",
+    "signUp": "Sign up",
+    "pickDiscipline": "Pick a discipline",
+    "signedUp": "Signed up for:",
+    "withdraw": "Withdraw"
   },
   "studentHome": {
     "greeting": "Hi, {{name}}",
@@ -347,7 +352,8 @@
       "payments": "Fee payments",
       "reservations": "Reservations",
       "qr": "QR check-in",
-      "messages": "Messages"
+      "messages": "Messages",
+      "competitions": "Competitions"
     },
     "payments": {
       "title": "Payments",
@@ -550,6 +556,34 @@
       "confirmDelete": "Delete this message from everyone's app?",
       "recipients_one": "{{count}} recipient",
       "recipients_other": "{{count}} recipients"
+    },
+    "comp": {
+      "title": "Competitions",
+      "add": "Competition",
+      "body": "Add a competition, open sign-ups, and students sign up in the app with a discipline.",
+      "none": "No upcoming competitions.",
+      "past": "Past",
+      "open": "Sign-ups open",
+      "closed": "Sign-ups closed",
+      "openSignups": "Open sign-ups",
+      "closeSignups": "Close sign-ups",
+      "edit": "Edit",
+      "signedUp_one": "{{count}} student signed up",
+      "signedUp_other": "{{count}} students signed up",
+      "years": "y",
+      "remove": "Remove",
+      "removeConfirm": "Remove {{name}} from this competition?",
+      "addTitle": "New competition",
+      "editTitle": "Edit competition",
+      "time": "Time",
+      "placeHint": "e.g. Arena hall, Pleven",
+      "notes": "Extra notes",
+      "notesHint": "fee, gear, meeting point, travel...",
+      "disciplines": "Disciplines",
+      "addDiscipline": "Add a discipline",
+      "openNow": "Students can sign up",
+      "delete": "Delete competition",
+      "deleteConfirm": "Delete this competition and its sign-ups?"
     }
   },
   "offline": {

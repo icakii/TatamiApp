@@ -1,15 +1,26 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { AttendanceCard } from '../../components/app/AttendanceCard'
 import { Card, DAY_KANJI, Eyebrow, Stagger, StaggerItem } from '../../components/app/ui'
 import { BeltChip } from '../../components/BeltChip'
 import { InstallHintCard } from '../../components/InstallHintCard'
 import { PaymentStatusChip, type PaymentStatusKey } from '../../components/PaymentStatusChip'
 import { useClub, useClubPath } from '../../hooks/useClub'
-import { useMember } from '../../hooks/useMember'
+import { useMember, useStaffMember } from '../../hooks/useMember'
 import { useNextClass } from '../../hooks/useNextClass'
 import { useNotifications } from '../../hooks/useNotifications'
 import { usePayments } from '../../hooks/usePayments'
+
+function landedBefore(clubId: string): boolean {
+  const key = `tatami-admin-landed-${clubId}`
+  try {
+    if (sessionStorage.getItem(key)) return true
+    sessionStorage.setItem(key, '1')
+  } catch {
+    return true
+  }
+  return false
+}
 
 export function Home() {
   const path = useClubPath()
@@ -19,6 +30,12 @@ export function Home() {
   const nextClass = useNextClass(club?.id, member?.group_id)
   const { data: payments } = usePayments(member?.id)
   const { data: notifications } = useNotifications(member?.id)
+  const staff = useStaffMember(club?.id)
+
+  // Coaches land in the admin panel when they open the app (once per visit,
+  // so "back to the app" still works).
+  if (club && staff.isLoading) return null
+  if (club && staff.data && !landedBefore(club.id)) return <Navigate to={path('/admin')} replace />
 
   if (!member) {
     return <div className="flex min-h-[60vh] items-center justify-center text-muted">...</div>

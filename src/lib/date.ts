@@ -6,3 +6,10 @@ export function localISODate(date: Date = new Date()): string {
   const d = String(date.getDate()).padStart(2, '0')
   return `${y}-${m}-${d}`
 }
+
+// "дек.", "Dec": the short month name. Asking for the month alone gives "12"
+// in Bulgarian, so format it together with the day and keep the month part.
+export function shortMonth(iso: string, lang: string | undefined): string {
+  const parts = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short' }).formatToParts(new Date(`${iso}T00:00:00`))
+  return parts.find((p) => p.type === 'month')?.value ?? ''
+}

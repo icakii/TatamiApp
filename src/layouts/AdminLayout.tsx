@@ -25,6 +25,7 @@ export function AdminLayout() {
     { to: path('/admin/attendance'), end: false, label: t('admin.nav.attendance') },
     { to: path('/admin/payments'), end: false, label: t('admin.nav.payments') },
     { to: path('/admin/messages'), end: false, label: t('admin.nav.messages') },
+    { to: path('/admin/competitions'), end: false, label: t('admin.nav.competitions') },
     ...(club?.store_enabled ? [{ to: path('/admin/reservations'), end: false, label: t('admin.nav.reservations') }] : []),
     ...(club?.qr_checkin_enabled ? [{ to: path('/admin/qr'), end: false, label: t('admin.nav.qr') }] : []),
   ]
