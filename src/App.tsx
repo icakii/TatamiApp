@@ -16,6 +16,7 @@ import { Attendance } from './pages/admin/Attendance'
 import { HallQr } from './pages/admin/HallQr'
 import { Members } from './pages/admin/Members'
 import { Messages } from './pages/admin/Messages'
+import { Register } from './pages/Register'
 import { AdminCompetitions } from './pages/admin/AdminCompetitions'
 import { Payments as AdminPayments } from './pages/admin/Payments'
 import { Reservations } from './pages/admin/Reservations'
@@ -39,6 +40,7 @@ function App() {
     <Routes>
       <Route path="/" element={<ClubPicker />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/privacy" element={<Privacy />} />
@@ -49,6 +51,7 @@ function App() {
         <Route path="privacy" element={<Privacy />} />
         <Route path="terms" element={<Terms />} />
         <Route path="checkin/:token" element={member(<CheckIn />)} />
+        <Route path="add-child" element={member(<Register mode="add" />)} />
         <Route element={member(<AppLayout />)}>
           <Route index element={<Home />} />
           <Route path="schedule" element={<Schedule />} />

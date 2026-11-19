@@ -114,6 +114,12 @@ export function Profile() {
         )}
 
         <StaggerItem>
+          <Link to={path('/add-child')} className={actionClass}>
+            + {t('profilePage.addChild')}
+          </Link>
+        </StaggerItem>
+
+        <StaggerItem>
           <ClubSwitcher />
         </StaggerItem>
 

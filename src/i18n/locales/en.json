@@ -228,7 +228,7 @@
     "submit": "Log in",
     "submitting": "Signing in...",
     "error": "Wrong username or password.",
-    "noAccount": "Don't have an account?",
+    "noAccount": "No account?",
     "noAccountLink": "Contact your coach",
     "modalTitle": "How to get access",
     "modalBody": "Access is only ever created by your coach. They will give you a username and password. Nobody can register themselves, to keep students' accounts safe.",
@@ -241,7 +241,8 @@
     "resetTitle": "New password",
     "resetNewPassword": "New password",
     "resetSubmit": "Save password",
-    "back": "Back"
+    "back": "Back",
+    "registerLink": "Register with your club's code"
   },
   "tabs": {
     "home": "Home",
@@ -320,7 +321,8 @@
     "newPassword": "New password (8+ characters)",
     "savePassword": "Save",
     "passwordSaved": "Password changed.",
-    "passwordError": "That did not work. Try a longer password."
+    "passwordError": "That did not work. Try a longer password.",
+    "addChild": "Add a child"
   },
   "admin": {
     "title": "Admin panel",
@@ -584,6 +586,14 @@
       "openNow": "Students can sign up",
       "delete": "Delete competition",
       "deleteConfirm": "Delete this competition and its sign-ups?"
+    },
+    "joinCode": {
+      "label": "Registration code",
+      "hint": "Students and parents enter it in the app under \"Register\".",
+      "copy": "Copy",
+      "rotate": "New code",
+      "rotateConfirm": "Make a new code? The old one stops working.",
+      "share": "Register in our club app: {{url}} → \"Register\", code: {{code}}"
     }
   },
   "offline": {
@@ -662,5 +672,51 @@
     "logout": "Log out",
     "error": "Could not save. Please try again.",
     "fallbackClub": "the club"
+  },
+  "welcome": {
+    "tagline": "Your club's schedule, belts, fees and competitions.",
+    "login": "Log in",
+    "register": "Register",
+    "registerHint": "To register you need your club's code. Ask your coach."
+  },
+  "register": {
+    "title": "Register",
+    "addTitle": "Add a child",
+    "stepCode": "Club code",
+    "stepYou": "Your details",
+    "stepStudents": "Students",
+    "stepTerms": "Terms",
+    "codeHint": "Enter the 6-character code your coach gave you.",
+    "code": "Club code",
+    "next": "Next",
+    "role": {
+      "parent": "Parent",
+      "student": "Student"
+    },
+    "roleHint": {
+      "parent": "signing up my child",
+      "student": "14+, signing up myself"
+    },
+    "yourName": "Your full name",
+    "phone": "Phone",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 8 characters.",
+    "passwordShort": "The password needs at least 8 characters.",
+    "you": "You",
+    "child": "Child {{n}}",
+    "removeChild": "Remove",
+    "studentName": "Student's full name",
+    "egn": "ЕГН (personal number)",
+    "egnInvalid": "Invalid ЕГН.",
+    "egnTwice": "The same ЕГН is entered twice.",
+    "addChild": "Add another child",
+    "scrollToEnd": "Scroll to the end to accept",
+    "acceptParent": "I have read and accept the Privacy policy and Terms of use. I am the parent or guardian of the children above.",
+    "acceptStudent": "I have read and accept the Privacy policy and Terms of use. I am 14 or older.",
+    "submit": "Register",
+    "addSubmit": "Add",
+    "haveAccount": "Already have an account?",
+    "error": "Something went wrong. Please try again."
   }
 }

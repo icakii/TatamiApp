@@ -122,13 +122,9 @@ export function Login() {
 
         <p className="mt-6 text-center text-sm text-muted">
           {t('auth.noAccount')}{' '}
-          <button
-            type="button"
-            onClick={() => setShowContactModal(true)}
-            className="text-aka-text hover:underline"
-          >
-            {t('auth.noAccountLink')}
-          </button>
+          <Link to="/register" className="font-semibold text-aka-text hover:underline">
+            {t('auth.registerLink')}
+          </Link>
         </p>
 
         <LegalLinks className="mt-8" />

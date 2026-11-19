@@ -1,6 +1,7 @@
 import { AnimatePresence } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { JoinCodeCard } from '../../components/admin/JoinCodeCard'
 import { MemberAvatar } from '../../components/admin/MemberAvatar'
 import { MemberDetailModal } from '../../components/admin/MemberDetailModal'
 import { StudentFormModal } from '../../components/admin/StudentFormModal'
@@ -70,6 +71,12 @@ export function Members() {
           + {t('admin.student.addButton')}
         </button>
       </PageHeader>
+
+      {club && (
+        <div className="mt-5">
+          <JoinCodeCard clubId={club.id} />
+        </div>
+      )}
 
       <div className="mt-5 grid grid-cols-3 gap-3">
         <StatCard label={t('admin.status.active')} value={count('active')} kanji="活" tone="bg-jade" />

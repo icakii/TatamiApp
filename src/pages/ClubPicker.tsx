@@ -1,11 +1,53 @@
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { ClubLogo } from '../components/ClubLogo'
 import { KanjiBackdrop } from '../components/KanjiBackdrop'
 import { TatamiMark } from '../components/TatamiMark'
 import { useAuth } from '../hooks/useAuth'
 import { getDefaultClub, setDefaultClub, useMyClubs } from '../hooks/useClub'
+
+// Signed out (what the store app opens on): two doors, log in or register
+// with the club's code.
+function Welcome() {
+  const { t } = useTranslation()
+  return (
+    <div className="relative flex min-h-screen flex-col items-center justify-between px-6 pb-[max(env(safe-area-inset-bottom),2rem)] pt-[max(env(safe-area-inset-top),3rem)]">
+      <KanjiBackdrop parallax={0.15} baseAlpha={0.08} />
+      <div className="kana-vignette" />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="relative mt-[12vh] text-center"
+      >
+        <TatamiMark className="mx-auto h-20 w-20 text-5xl" />
+        <p className="mt-6 font-display text-4xl font-bold uppercase tracking-[0.25em] text-ink">Tatami</p>
+        <p className="mx-auto mt-3 max-w-xs text-muted">{t('welcome.tagline')}</p>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-sm space-y-3"
+      >
+        <Link
+          to="/login"
+          className="flex min-h-14 w-full items-center justify-center rounded-2xl bg-ink font-display text-base uppercase tracking-wide text-shiro shadow-[0_16px_32px_-16px_rgba(31,27,22,0.7)] transition-transform active:scale-[0.98]"
+        >
+          {t('welcome.login')}
+        </Link>
+        <Link
+          to="/register"
+          className="flex min-h-14 w-full items-center justify-center rounded-2xl border-2 border-ink/80 font-display text-base uppercase tracking-wide text-ink transition-transform active:scale-[0.98]"
+        >
+          {t('welcome.register')}
+        </Link>
+        <p className="pt-2 text-center text-xs text-muted">{t('welcome.registerHint')}</p>
+      </motion.div>
+    </div>
+  )
+}
 
 // "/": straight into your club. One club: go. Several: the default one from
 // the profile, otherwise pick. None yet: say who to ask.
@@ -18,7 +60,7 @@ export function ClubPicker() {
   if (loading || (session && isLoading)) {
     return <div className="flex min-h-screen items-center justify-center text-muted">...</div>
   }
-  if (!session) return <Navigate to="/login" replace />
+  if (!session) return <Welcome />
 
   const clubs = mine ?? []
   const preferred = getDefaultClub()
