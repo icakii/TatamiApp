@@ -18,9 +18,12 @@ export interface Club {
   grades_enabled: boolean
   qr_checkin_enabled: boolean
   store_enabled: boolean
+  // The club's own rules / consent text (null = the standard one).
+  member_terms: string | null
+  member_terms_updated_at: string | null
 }
 
-const COLUMNS = 'id, slug, name, default_locale, status, logo_path, accent_color, grades_enabled, qr_checkin_enabled, store_enabled'
+const COLUMNS = 'id, slug, name, default_locale, status, logo_path, accent_color, grades_enabled, qr_checkin_enabled, store_enabled, member_terms, member_terms_updated_at'
 
 const ClubContext = createContext<string | null>(null)
 

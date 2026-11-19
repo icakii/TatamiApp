@@ -11,7 +11,7 @@ import { KanjiBackdrop } from './KanjiBackdrop'
 
 // Bump when the privacy policy or terms change in substance: everyone is
 // asked to confirm the new version on their next visit.
-export const LEGAL_VERSION = '2026-11-18'
+export const LEGAL_VERSION = '2026-11-19'
 
 // GDPR: the first time someone opens a club's app they confirm they've read
 // its privacy policy and terms, and that they're the child's parent or
@@ -49,7 +49,7 @@ export function LegalGate({ children }: { children: ReactNode }) {
     mutationFn: async () => {
       const { error } = await supabase
         .from('legal_acceptances')
-        .upsert({ club_id: club!.id, version: LEGAL_VERSION, as_guardian: guardian }, { ignoreDuplicates: true })
+        .upsert({ club_id: club!.id, version: LEGAL_VERSION, as_guardian: guardian, club_terms_at: club!.member_terms_updated_at }, { ignoreDuplicates: true })
       if (error) throw error
     },
     onSuccess: () => queryClient.setQueryData(key, true),
@@ -76,14 +76,14 @@ export function LegalGate({ children }: { children: ReactNode }) {
         <h1 className="mt-4 text-center font-display text-2xl font-bold uppercase tracking-wide text-ink">{t('legalAccept.title')}</h1>
         <p className="mt-3 text-center text-sm leading-relaxed text-muted">{t('legalAccept.body', { club: club?.name ?? '' })}</p>
 
-        <div className="mt-5 grid grid-cols-2 gap-2">
-          {(['privacy', 'terms'] as const).map((doc) => (
+        <div className="mt-5 grid grid-cols-3 gap-2">
+          {(['rules', 'privacy', 'terms'] as const).map((doc) => (
             <Link
               key={doc}
               to={path(`/${doc}`)}
-              className="flex min-h-11 items-center justify-center rounded-xl border border-ink/15 px-3 text-center font-display text-xs uppercase tracking-wide text-ink transition-colors hover:border-aka-text hover:text-aka-text"
+              className="flex min-h-11 items-center justify-center rounded-xl border border-ink/15 px-1.5 text-center font-display text-[10px] uppercase tracking-wide text-ink transition-colors hover:border-aka-text hover:text-aka-text"
             >
-              {t(`footer.${doc}`)} ↗
+              {doc === 'rules' ? t('clubRules.short') : t(`footer.${doc}`)} ↗
             </Link>
           ))}
         </div>

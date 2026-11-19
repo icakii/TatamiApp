@@ -7,10 +7,12 @@ import { KanjiBackdrop } from '../components/KanjiBackdrop'
 import { TatamiMark } from '../components/TatamiMark'
 import { useAuth } from '../hooks/useAuth'
 import { useClub, type Club } from '../hooks/useClub'
+import { ClubTermsText } from '../components/ClubTerms'
 import { egnBirthDate, isValidEgn } from '../lib/egn'
+import { memberTermsFor } from '../lib/memberTerms'
 import { supabase } from '../lib/supabaseClient'
 
-type ClubInfo = Pick<Club, 'id' | 'slug' | 'name' | 'logo_path' | 'accent_color'>
+type ClubInfo = Pick<Club, 'id' | 'slug' | 'name' | 'logo_path' | 'accent_color' | 'member_terms'>
 
 interface Kid {
   full_name: string
@@ -61,6 +63,7 @@ export function Register({ mode = 'new' }: { mode?: 'new' | 'add' }) {
   const [kids, setKids] = useState<Kid[]>([{ full_name: '', egn: '' }])
   const [readToEnd, setReadToEnd] = useState(false)
   const [accepted, setAccepted] = useState(false)
+  const [photos, setPhotos] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -106,12 +109,12 @@ export function Register({ mode = 'new' }: { mode?: 'new' | 'add' }) {
     try {
       const students = kids.map((k) => ({ full_name: k.full_name.trim(), egn: k.egn }))
       if (adding) {
-        await callRegister({ club_id: currentClub?.id, role: 'parent', students, accepted })
+        await callRegister({ club_id: currentClub?.id, role: 'parent', students, accepted, photo_consent: photos })
         navigate(`/${currentClub?.slug}/profile`, { replace: true })
         window.location.reload()
         return
       }
-      const res = await callRegister({ code, role, account: { ...account, email: account.email.trim() }, students, accepted })
+      const res = await callRegister({ code, role, account: { ...account, email: account.email.trim() }, students, accepted, photo_consent: photos })
       const { error: signInError } = await signIn(account.email.trim(), account.password)
       navigate(signInError ? `/${res.club.slug}/login` : `/${res.club.slug}`, { replace: true })
     } catch (err) {
@@ -259,6 +262,11 @@ export function Register({ mode = 'new' }: { mode?: 'new' | 'add' }) {
                   }}
                   className="max-h-72 space-y-4 overflow-y-auto rounded-2xl border border-ink/10 bg-kuro/50 p-4 text-sm leading-relaxed text-muted"
                 >
+                  <section>
+                    <p className="font-display text-sm uppercase tracking-wide text-aka-text">{t('register.clubRules', { club: theClub?.name ?? '' })}</p>
+                    <ClubTermsText text={memberTermsFor(theClub)} className="mt-2" />
+                  </section>
+                  <p className="border-t border-ink/10 pt-3 font-display text-sm uppercase tracking-wide text-aka-text">{t('register.privacyAndTerms')}</p>
                   {terms.map((s) => (
                     <section key={s.title}>
                       <p className="font-display text-xs uppercase tracking-wide text-ink">{s.title}</p>
@@ -272,6 +280,12 @@ export function Register({ mode = 'new' }: { mode?: 'new' | 'add' }) {
                 <label className={`flex items-start gap-3 text-sm text-ink transition-opacity ${readToEnd ? '' : 'pointer-events-none opacity-40'}`}>
                   <input type="checkbox" disabled={!readToEnd} checked={accepted} onChange={(e) => setAccepted(e.target.checked)} className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-aka)]" />
                   <span>{t(role === 'parent' || adding ? 'register.acceptParent' : 'register.acceptStudent')}</span>
+                </label>
+                <label className={`flex items-start gap-3 text-sm text-ink transition-opacity ${readToEnd ? '' : 'pointer-events-none opacity-40'}`}>
+                  <input type="checkbox" disabled={!readToEnd} checked={photos} onChange={(e) => setPhotos(e.target.checked)} className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-aka)]" />
+                  <span>
+                    {t('register.photoConsent')} <span className="text-muted">{t('register.optional')}</span>
+                  </span>
                 </label>
                 <button type="button" onClick={submit} disabled={!accepted || busy} className={primary}>
                   {busy ? '...' : t(adding ? 'register.addSubmit' : 'register.submit')}

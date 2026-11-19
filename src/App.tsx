@@ -17,6 +17,7 @@ import { HallQr } from './pages/admin/HallQr'
 import { Members } from './pages/admin/Members'
 import { Messages } from './pages/admin/Messages'
 import { Register } from './pages/Register'
+import { ClubRules } from './pages/ClubRules'
 import { AdminCompetitions } from './pages/admin/AdminCompetitions'
 import { Payments as AdminPayments } from './pages/admin/Payments'
 import { Reservations } from './pages/admin/Reservations'
@@ -50,6 +51,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="terms" element={<Terms />} />
+        <Route path="rules" element={<ClubRules />} />
         <Route path="checkin/:token" element={member(<CheckIn />)} />
         <Route path="add-child" element={member(<Register mode="add" />)} />
         <Route element={member(<AppLayout />)}>

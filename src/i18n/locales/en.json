@@ -594,6 +594,16 @@
       "rotate": "New code",
       "rotateConfirm": "Make a new code? The old one stops working.",
       "share": "Register in our club app: {{url}} → \"Register\", code: {{code}}"
+    },
+    "terms": {
+      "label": "Membership terms",
+      "custom": "Your own text",
+      "standard": "Tatami's standard text",
+      "edit": "View and edit",
+      "title": "Membership terms",
+      "hint": "Parents accept these with the tick when they register. A line starting with a number (\"3. Fees\") is a heading. Put in your fees and rules.",
+      "reset": "Back to the standard text",
+      "save": "Save"
     }
   },
   "offline": {
@@ -666,7 +676,7 @@
   "legalAccept": {
     "title": "Before you continue",
     "body": "{{club}} keeps training data in this app: name, group, belt, attendance, fees and, where given, ЕГН, contacts and photo. Only the club coaches and you can see it.",
-    "readBoth": "I have read the Privacy policy and the Terms of use.",
+    "readBoth": "I have read the club's rules, the Privacy policy and the Terms of use.",
     "guardian": "I am the child's parent or guardian, or a student aged 14 or over.",
     "continue": "Continue",
     "logout": "Log out",
@@ -712,11 +722,20 @@
     "egnTwice": "The same ЕГН is entered twice.",
     "addChild": "Add another child",
     "scrollToEnd": "Scroll to the end to accept",
-    "acceptParent": "I have read and accept the Privacy policy and Terms of use. I am the parent or guardian of the children above.",
-    "acceptStudent": "I have read and accept the Privacy policy and Terms of use. I am 14 or older.",
+    "acceptParent": "I have read and accept the club's rules, the Privacy policy and the Terms of use, including processing health data where needed. I am the parent or guardian of the children above.",
+    "acceptStudent": "I have read and accept the club's rules, the Privacy policy and the Terms of use, including processing health data where needed. I am 14 or older.",
     "submit": "Register",
     "addSubmit": "Add",
     "haveAccount": "Already have an account?",
-    "error": "Something went wrong. Please try again."
+    "error": "Something went wrong. Please try again.",
+    "clubRules": "{{club}} rules",
+    "privacyAndTerms": "Privacy and terms",
+    "photoConsent": "I agree that the club may publish photos and videos from training and competitions (website, social media).",
+    "optional": "(optional)"
+  },
+  "clubRules": {
+    "title": "Club rules",
+    "short": "Rules",
+    "updated": "Last changed: {{date}}"
   }
 }

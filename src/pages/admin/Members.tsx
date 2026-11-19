@@ -2,6 +2,7 @@ import { AnimatePresence } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { JoinCodeCard } from '../../components/admin/JoinCodeCard'
+import { MemberTermsCard } from '../../components/admin/MemberTermsCard'
 import { MemberAvatar } from '../../components/admin/MemberAvatar'
 import { MemberDetailModal } from '../../components/admin/MemberDetailModal'
 import { StudentFormModal } from '../../components/admin/StudentFormModal'
@@ -75,6 +76,9 @@ export function Members() {
       {club && (
         <div className="mt-5">
           <JoinCodeCard clubId={club.id} />
+          <div className="mt-3">
+            <MemberTermsCard club={club} />
+          </div>
         </div>
       )}
 
