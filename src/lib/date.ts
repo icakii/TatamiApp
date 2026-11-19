@@ -7,9 +7,12 @@ export function localISODate(date: Date = new Date()): string {
   return `${y}-${m}-${d}`
 }
 
-// "дек.", "Dec": the short month name. Asking for the month alone gives "12"
-// in Bulgarian, so format it together with the day and keep the month part.
+// "дек.", "Dec": the short month name. Bulgarian short dates are numeric
+// ("12.12"), so Bulgarian uses its own list.
+const BG_MONTHS = ['ян.', 'февр.', 'март', 'апр.', 'май', 'юни', 'юли', 'авг.', 'септ.', 'окт.', 'ноем.', 'дек.']
+
 export function shortMonth(iso: string, lang: string | undefined): string {
-  const parts = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short' }).formatToParts(new Date(`${iso}T00:00:00`))
-  return parts.find((p) => p.type === 'month')?.value ?? ''
+  const d = new Date(`${iso}T00:00:00`)
+  if (!lang || lang.startsWith('bg')) return BG_MONTHS[d.getMonth()]
+  return d.toLocaleDateString(lang, { month: 'short' })
 }
